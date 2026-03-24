@@ -1,4 +1,4 @@
-﻿namespace Register
+namespace Register
 {
 	partial class Reg
 	{
@@ -44,6 +44,7 @@
 			addressTextBox = new TextBox();
 			birthdayTextBox = new MaskedTextBox(); // 將其改為 MaskedTextBox
 			idNumberTextBox = new TextBox();
+			btnCheckId = new Button();
 			nationalIdTextBox = new TextBox(); // 新增身分證
 			label16 = new Label();             // 新增身分證標籤
 			genderComboBox = new ComboBox();
@@ -162,6 +163,7 @@
 			panel2.Controls.Add(addressTextBox);
 			panel2.Controls.Add(birthdayTextBox);
 			panel2.Controls.Add(idNumberTextBox);
+			panel2.Controls.Add(btnCheckId);
 			panel2.Controls.Add(genderComboBox);
 			panel2.Controls.Add(label8);
 			panel2.Controls.Add(label7);
@@ -182,11 +184,11 @@
 			label10.BackColor = Color.FromArgb(230, 247, 255);
 			label10.BorderStyle = BorderStyle.FixedSingle;
 			label10.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-			label10.Location = new Point(610, 185);
+			label10.Location = new Point(530, 185);
 			label10.Name = "label10";
 			label10.Size = new Size(80, 35);
 			label10.TabIndex = 17;
-			label10.Text = "市/區";
+			label10.Text = "地    址";
 			label10.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// label9
@@ -194,19 +196,19 @@
 			label9.BackColor = Color.FromArgb(230, 247, 255);
 			label9.BorderStyle = BorderStyle.FixedSingle;
 			label9.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-			label9.Location = new Point(330, 185);
+			label9.Location = new Point(290, 185);
 			label9.Name = "label9";
 			label9.Size = new Size(80, 35);
 			label9.TabIndex = 16;
-			label9.Text = "縣/市";
+			label9.Text = "市/區";
 			label9.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// districtComboBox
 			// 
 			districtComboBox.FormattingEnabled = true;
-			districtComboBox.Location = new Point(440, 185);
+			districtComboBox.Location = new Point(390, 185);
 			districtComboBox.Name = "districtComboBox";
-			districtComboBox.Size = new Size(160, 35);
+			districtComboBox.Size = new Size(120, 35);
 			districtComboBox.TabIndex = 15;
 			// 
 			// cityComboBox
@@ -215,7 +217,7 @@
 			cityComboBox.Items.AddRange(new object[] { "台北市", "新北市", "花蓮縣", "宜蘭縣" });
 			cityComboBox.Location = new Point(160, 185);
 			cityComboBox.Name = "cityComboBox";
-			cityComboBox.Size = new Size(160, 35);
+			cityComboBox.Size = new Size(120, 35);
 			cityComboBox.TabIndex = 14;
 			// 
 			// phoneTextBox
@@ -243,9 +245,9 @@
 			// 
 			addressTextBox.BorderStyle = BorderStyle.FixedSingle;
 			addressTextBox.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-			addressTextBox.Location = new Point(700, 185);
+			addressTextBox.Location = new Point(630, 185);
 			addressTextBox.Name = "addressTextBox";
-			addressTextBox.Size = new Size(360, 35);
+			addressTextBox.Size = new Size(430, 35);
 			addressTextBox.TabIndex = 11;
 			addressTextBox.Text = "中央路3段789號";
 			// 
@@ -262,7 +264,19 @@
 			birthdayTextBox.PromptChar = '_';
 			birthdayTextBox.TextChanged += BirthdayTextBox_TextChanged;
 			// 
-			// idNumberTextBox
+// btnCheckId
+// 
+btnCheckId.BackColor = Color.FromArgb(0, 90, 156);
+btnCheckId.ForeColor = Color.White;
+btnCheckId.Font = new Font("微軟正黑體", 12F, FontStyle.Regular, GraphicsUnit.Point);
+btnCheckId.Location = new Point(620, 68);
+btnCheckId.Name = "btnCheckId";
+btnCheckId.Size = new Size(160, 35);
+btnCheckId.TabIndex = 22;
+btnCheckId.Text = "檢查病患資料";
+btnCheckId.UseVisualStyleBackColor = false;
+// 
+// idNumberTextBox
 			// 
 			idNumberTextBox.BorderStyle = BorderStyle.FixedSingle;
 			idNumberTextBox.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
@@ -326,7 +340,7 @@
 			label7.Name = "label7";
 			label7.Size = new Size(108, 35);
 			label7.TabIndex = 6;
-			label7.Text = "地    址";
+			label7.Text = "縣/市";
 			label7.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// label6
@@ -436,7 +450,9 @@
 			regNumberTextBox.Name = "regNumberTextBox";
 			regNumberTextBox.Size = new Size(160, 70);
 			regNumberTextBox.TabIndex = 11;
-			regNumberTextBox.Text = "12";
+			regNumberTextBox.Text = "";
+			regNumberTextBox.ReadOnly = true;
+			regNumberTextBox.BackColor = Color.FromArgb(240, 240, 240);
 			regNumberTextBox.TextAlign = HorizontalAlignment.Center;
 			// 
 			// label14
@@ -668,6 +684,7 @@
 		private ComboBox doctorComboBox;
 		private Label label13;
 		private Button confirmButton;
+		private Button btnCheckId;
 		private Button exitButton;
 		private Button clearButton;
 		private GroupBox groupBox1;
@@ -685,3 +702,4 @@
 		private Button btnReport;
 	}
 }
+
