@@ -14,51 +14,51 @@
 #### 1. Departments (科別表)
 | 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
 |---|---|---|---|---|---|
-| PK | Id | 科別代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
-| | Name | 科別名稱 | TEXT | NOT NULL | 儲存 7 大科別 |
+| PK | Id | 科別代號 | INT | PRIMARY KEY IDENTITY(1,1) | 唯一識別碼 |
+| | Name | 科別名稱 | NVARCHAR(50) | NOT NULL | 儲存 7 大科別 |
 
 #### 2. TimeSlots (時段表)
 | 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
 |---|---|---|---|---|---|
-| PK | Id | 時段代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
-| | Name | 時段名稱 | TEXT | NOT NULL | 儲存上午、下午、晚上等時段 |
+| PK | Id | 時段代號 | INT | PRIMARY KEY IDENTITY(1,1) | 唯一識別碼 |
+| | Name | 時段名稱 | NVARCHAR(50) | NOT NULL | 儲存上午、下午、晚上等時段 |
 
 #### 3. Doctors (醫師表)
 | 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
 |---|---|---|---|---|---|
-| PK | Id | 醫師代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
-| | Name | 醫師姓名 | TEXT | NOT NULL | 醫生全名 |
-| FK | DepartmentId | 所屬科別 | INTEGER | REFERENCES Departments(Id)| 掛在特定的醫學科別下 |
+| PK | Id | 醫師代號 | INT | PRIMARY KEY IDENTITY(1,1) | 唯一識別碼 |
+| | Name | 醫師姓名 | NVARCHAR(50) | NOT NULL | 醫生全名 |
+| FK | DepartmentId | 所屬科別 | INT | REFERENCES Departments(Id)| 掛在特定的醫學科別下 |
 
 #### 4. DoctorSchedules (醫師排班表)
 | 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
 |---|---|---|---|---|---|
-| PK | Id | 排班代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
-| FK | DoctorId | 醫師代號 | INTEGER | REFERENCES Doctors(Id) | 掛號連動篩選重點 |
-| FK | TimeSlotId | 時段代號 | INTEGER | REFERENCES TimeSlots(Id)| 掛號連動篩選重點 |
+| PK | Id | 排班代號 | INT | PRIMARY KEY IDENTITY(1,1) | 唯一識別碼 |
+| FK | DoctorId | 醫師代號 | INT | REFERENCES Doctors(Id) | 掛號連動篩選重點 |
+| FK | TimeSlotId | 時段代號 | INT | REFERENCES TimeSlots(Id)| 掛號連動篩選重點 |
 
 #### 5. Patients (病患資料表)
 | 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
 |---|---|---|---|---|---|
-| PK | Id | 系統代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
-| | MedicalRecordNo| 病歷號碼 | TEXT | UNIQUE | 病患的診所專屬病歷號碼 |
-| | NationalId| 身分證號 | TEXT | UNIQUE | 病患的身分證/居留證字號 |
-| | Name | 姓名 | TEXT | NOT NULL | 病患中文全名 |
-| | Gender | 性別 | TEXT | | (0.女, 1.男, 2.中性, 3.未知) |
-| | BirthDate| 生日 | TEXT | | 儲存 7 碼民國年字串 (如 0920101) |
-| | Phone| 聯絡電話 | TEXT | | 病患的手機或市話 |
-| | Address| 居住地址 | TEXT | | 門牌及詳細地址 |
+| PK | Id | 系統代號 | INT | PRIMARY KEY IDENTITY(1,1) | 唯一識別碼 |
+| | MedicalRecordNo| 病歷號碼 | NVARCHAR(50) | UNIQUE | 病患的診所專屬病歷號碼 |
+| | NationalId| 身分證號 | NVARCHAR(50) | UNIQUE | 病患的身分證/居留證字號 |
+| | Name | 姓名 | NVARCHAR(100) | NOT NULL | 病患中文全名 |
+| | Gender | 性別 | NVARCHAR(10) | | (0.女, 1.男, 2.中性, 3.未知) |
+| | BirthDate| 生日 | NVARCHAR(20) | | 儲存 7 碼民國年字串 (如 0920101) |
+| | Phone| 聯絡電話 | NVARCHAR(50) | | 病患的手機或市話 |
+| | Address| 居住地址 | NVARCHAR(200) | | 門牌及詳細地址 |
 
 #### 6. Registrations (掛號紀錄表)
 | 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
 |---|---|---|---|---|---|
-| PK | Id | 掛號代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
-| FK | PatientId | 病患代號 | INTEGER | REFERENCES Patients(Id) | 病患主鍵對應 |
-| FK | DoctorId | 看診醫師 | INTEGER | REFERENCES Doctors(Id) | 醫師主鍵對應 |
-| FK | TimeSlotId | 看診時段 | INTEGER | REFERENCES TimeSlots(Id)| 時段主鍵對應 |
-| | RegDate | 掛號日期 | TEXT | | 申請就醫的日期 |
-| | RegNumber | 號牌號碼 | INTEGER | | 當天掛號梯次 (如 12 號) |
-| | IsFirstTime| 初診狀態| BOOLEAN | | true=初診, false=複診 |
+| PK | Id | 掛號代號 | INT | PRIMARY KEY IDENTITY(1,1) | 唯一識別碼 |
+| FK | PatientId | 病患代號 | INT | REFERENCES Patients(Id) | 病患主鍵對應 |
+| FK | DoctorId | 看診醫師 | INT | REFERENCES Doctors(Id) | 醫師主鍵對應 |
+| FK | TimeSlotId | 看診時段 | INT | REFERENCES TimeSlots(Id)| 時段主鍵對應 |
+| | RegDate | 掛號日期 | NVARCHAR(50) | | 申請就醫的日期 |
+| | RegNumber | 號牌號碼 | INT | | 當天掛號梯次 (如 12 號) |
+| | IsFirstTime| 初診狀態| BIT | | 1=初診, 0=複診 |
 
 ### 1.2 系統操作表單 (共 5 個頁面)
 包含主畫面在內，本系統具有 5 個專門的 Windows Forms 頁面：
