@@ -1,51 +1,128 @@
 namespace Register
 {
+	public class ComboItem
+	{
+		public int Id { get; set; }
+		public string Name { get; set; } = string.Empty;
+		public override string ToString() => Name;
+	}
+
 	public partial class Reg : Form
 	{
 		public Reg()
 		{
 			InitializeComponent();
+			LoadInitialData();
+		}
+
+		private void LoadInitialData()
+		{
+			departmentComboBox.Items.Clear();
+			timeSlotComboBox.Items.Clear();
+			
+			using (var conn = new Microsoft.Data.Sqlite.SqliteConnection(DatabaseHelper.ConnectionString))
+			{
+				conn.Open();
+				using (var cmd = conn.CreateCommand())
+				{
+					cmd.CommandText = "SELECT Id, Name FROM Departments";
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							departmentComboBox.Items.Add(new ComboItem { Id = reader.GetInt32(0), Name = reader.GetString(1) });
+						}
+					}
+				}
+				using (var cmd = conn.CreateCommand())
+				{
+					cmd.CommandText = "SELECT Id, Name FROM TimeSlots";
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							timeSlotComboBox.Items.Add(new ComboItem { Id = reader.GetInt32(0), Name = reader.GetString(1) });
+						}
+					}
+				}
+			}
+
+			departmentComboBox.DisplayMember = "Name";
+			departmentComboBox.ValueMember = "Id";
+			timeSlotComboBox.DisplayMember = "Name";
+			timeSlotComboBox.ValueMember = "Id";
+			doctorComboBox.DisplayMember = "Name";
+			doctorComboBox.ValueMember = "Id";
+
 			genderComboBox.SelectedIndex = 0;
 			cityComboBox.SelectedIndex = 2;
+			
+			departmentComboBox.SelectedIndexChanged += DepartmentOrTimeSlot_Changed;
+			timeSlotComboBox.SelectedIndexChanged += DepartmentOrTimeSlot_Changed;
+		}
+
+		private void DepartmentOrTimeSlot_Changed(object sender, EventArgs e)
+		{
+			doctorComboBox.Items.Clear();
+			if (departmentComboBox.SelectedItem == null || timeSlotComboBox.SelectedItem == null)
+				return;
+				
+			var dept = (ComboItem)departmentComboBox.SelectedItem;
+			var time = (ComboItem)timeSlotComboBox.SelectedItem;
+
+			using (var conn = new Microsoft.Data.Sqlite.SqliteConnection(DatabaseHelper.ConnectionString))
+			{
+				conn.Open();
+				using (var cmd = conn.CreateCommand())
+				{
+					cmd.CommandText = @"
+						SELECT d.Id, d.Name 
+						FROM Doctors d
+						JOIN DoctorSchedules ds ON d.Id = ds.DoctorId
+						WHERE d.DepartmentId = $deptId AND ds.TimeSlotId = $timeId";
+					cmd.Parameters.AddWithValue("$deptId", dept.Id);
+					cmd.Parameters.AddWithValue("$timeId", time.Id);
+
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							doctorComboBox.Items.Add(new ComboItem { Id = reader.GetInt32(0), Name = reader.GetString(1) });
+						}
+					}
+				}
+			}
 		}
 
 		private void IdNumberTextBox_TextChanged(object sender, EventArgs e)
 		{
-			// TODO: 身份證字號格式驗證
 		}
 
 		private void BirthdayTextBox_TextChanged(object sender, EventArgs e)
 		{
-			// 支援民國年格式 (如 1001120) 的簡易年齡計算
-			string input = birthdayTextBox.Text.Trim();
-			if (input.Length >= 3)
+			string input = birthdayTextBox.Text.Replace("_", "").Replace(" ", "").Trim();
+			if (input.Length == 7) // 民國年 YYYMMDD
 			{
 				try
 				{
-					// 假設前 3 位是民國年 (或前幾位是年，後 4 位是月日)
-					string yearStr = input.Length > 4 ? input.Substring(0, input.Length - 4) : "0";
+					string yearStr = input.Substring(0, 3);
 					if (int.TryParse(yearStr, out int rocYear))
 					{
 						int solarYear = rocYear + 1911;
 						int currentYear = DateTime.Now.Year;
 						int age = currentYear - solarYear;
-						
 						if (age >= 0 && age < 150)
 						{
 							ageTextBox.Text = age.ToString();
 						}
 					}
 				}
-				catch
-				{
-					// 忽略解析錯誤
-				}
+				catch { }
 			}
 		}
 
 		private void PhoneTextBox_TextChanged(object sender, EventArgs e)
 		{
-			// TODO: 電話號碼格式驗證
 		}
 
 		private void ConfirmButton_Click(object sender, EventArgs e)
@@ -55,21 +132,21 @@ namespace Register
 
 		private void ClearButton_Click(object sender, EventArgs e)
 		{
-			// 清空所有輸入項
 			idNumberTextBox.Clear();
+			nationalIdTextBox.Clear();
 			nameTextBox.Clear();
 			birthdayTextBox.Clear();
-			ageTextBox.Clear(); // 注意：Designer 中目前是 txtAge，我在計畫中提過要一致，稍後確認
+			ageTextBox.Clear();
 			phoneTextBox.Clear();
 			addressTextBox.Clear();
 			regDateTextBox.Clear();
 			regNumberTextBox.Clear();
 			
-			// 恢復下拉選單預設值
 			genderComboBox.SelectedIndex = 0;
 			cityComboBox.SelectedIndex = 0;
 			districtComboBox.SelectedIndex = -1;
 			departmentComboBox.SelectedIndex = -1;
+			timeSlotComboBox.SelectedIndex = -1;
 			doctorComboBox.SelectedIndex = -1;
 			
 			idNumberTextBox.Focus();
@@ -83,6 +160,26 @@ namespace Register
 		private void PrintButton_Click(object sender, EventArgs e)
 		{
 			MessageBox.Show("正在列印掛號單...", "列印中", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+
+		private void BtnSchedule_Click(object sender, EventArgs e)
+		{
+			new DoctorScheduleForm().ShowDialog();
+		}
+
+		private void BtnPatients_Click(object sender, EventArgs e)
+		{
+			new PatientManagementForm().ShowDialog();
+		}
+
+		private void BtnDept_Click(object sender, EventArgs e)
+		{
+			new DepartmentManagementForm().ShowDialog();
+		}
+
+		private void BtnReport_Click(object sender, EventArgs e)
+		{
+			new ReportForm().ShowDialog();
 		}
 	}
 }

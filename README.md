@@ -1,309 +1,167 @@
 # 憨吉聯合大醫院掛號系統 — 完整說明文件
 
 > **系統名稱**: 憨吉聯合大醫院掛號系統
-> **技術平台**: .NET 7 · Windows Forms · C#
-> **文件版本**: v1.0.0  ·  2026-03-24
+> **技術平台**: .NET 7 · Windows Forms · C# · SQLite
+> **文件版本**: v2.0.0  ·  2026-03-24
 
 ---
 
-## 一、掛號程式畫面說明
+## 一、系統架構與資料庫設計
+本系統採用本地輕量級關聯式資料庫 `SQLite` (`clinic.db`) 進行資料儲存，以支援多個管理頁面。
 
-### 1.1 系統主畫面
+### 1.1 資料表結構 (共 6 個表)
 
-![憨吉聯合大醫院掛號系統主畫面](file:///C:/Users/lan/.gemini/antigravity/brain/7317f20a-3302-4eda-98ad-889be85f1204/憨吉聯合大醫院.png)
+#### 1. Departments (科別表)
+| 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
+|---|---|---|---|---|---|
+| PK | Id | 科別代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
+| | Name | 科別名稱 | TEXT | NOT NULL | 儲存 7 大科別 |
 
-### 1.2 畫面區域說明
+#### 2. TimeSlots (時段表)
+| 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
+|---|---|---|---|---|---|
+| PK | Id | 時段代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
+| | Name | 時段名稱 | TEXT | NOT NULL | 儲存上午、下午、晚上等時段 |
 
-主畫面依功能劃分為 **四大區塊**：
+#### 3. Doctors (醫師表)
+| 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
+|---|---|---|---|---|---|
+| PK | Id | 醫師代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
+| | Name | 醫師姓名 | TEXT | NOT NULL | 醫生全名 |
+| FK | DepartmentId | 所屬科別 | INTEGER | REFERENCES Departments(Id)| 掛在特定的醫學科別下 |
 
+#### 4. DoctorSchedules (醫師排班表)
+| 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
+|---|---|---|---|---|---|
+| PK | Id | 排班代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
+| FK | DoctorId | 醫師代號 | INTEGER | REFERENCES Doctors(Id) | 掛號連動篩選重點 |
+| FK | TimeSlotId | 時段代號 | INTEGER | REFERENCES TimeSlots(Id)| 掛號連動篩選重點 |
+
+#### 5. Patients (病患資料表)
+| 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
+|---|---|---|---|---|---|
+| PK | Id | 系統代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
+| | MedicalRecordNo| 病歷號碼 | TEXT | UNIQUE | 病患的診所專屬病歷號碼 |
+| | NationalId| 身分證號 | TEXT | UNIQUE | 病患的身分證/居留證字號 |
+| | Name | 姓名 | TEXT | NOT NULL | 病患中文全名 |
+| | Gender | 性別 | TEXT | | (0.女, 1.男, 2.中性, 3.未知) |
+| | BirthDate| 生日 | TEXT | | 儲存 7 碼民國年字串 (如 0920101) |
+| | Phone| 聯絡電話 | TEXT | | 病患的手機或市話 |
+| | Address| 居住地址 | TEXT | | 門牌及詳細地址 |
+
+#### 6. Registrations (掛號紀錄表)
+| 鍵值 | 欄位名稱 | 中文說明 | 型態 | 屬性 | 說明 |
+|---|---|---|---|---|---|
+| PK | Id | 掛號代號 | INTEGER | PRIMARY KEY AUTOINCREMENT | 唯一識別碼 |
+| FK | PatientId | 病患代號 | INTEGER | REFERENCES Patients(Id) | 病患主鍵對應 |
+| FK | DoctorId | 看診醫師 | INTEGER | REFERENCES Doctors(Id) | 醫師主鍵對應 |
+| FK | TimeSlotId | 看診時段 | INTEGER | REFERENCES TimeSlots(Id)| 時段主鍵對應 |
+| | RegDate | 掛號日期 | TEXT | | 申請就醫的日期 |
+| | RegNumber | 號牌號碼 | INTEGER | | 當天掛號梯次 (如 12 號) |
+| | IsFirstTime| 初診狀態| BOOLEAN | | true=初診, false=複診 |
+
+### 1.2 系統操作表單 (共 5 個頁面)
+包含主畫面在內，本系統具有 5 個專門的 Windows Forms 頁面：
+1. **Reg.cs**：掛號系統主畫面。
+2. **DoctorScheduleForm.cs**：醫師排班管理介面，由上方按鈕開啟。
+3. **PatientManagementForm.cs**：病患掛號歷史總覽表。
+4. **DepartmentManagementForm.cs**：科別管理與轄下醫師清單。
+5. **ReportForm.cs**：掛號統計報表頁面。
+
+---
+
+## 二、掛號程式畫面說明
+
+### 2.1 畫面區域與佈局
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  ▌HEADER 標題列 (panel1)                                    │
+│    憨吉聯合大醫院    [科別管理] [排班管理] [病患總覽] [統計報表] │
+├─────────────────────────────────────────────────────────────┤
+│  ▌SECTION A 病患基本資料 (panel2)                           │
+│   [ 病歷號碼 ][ 輸入 ] [ 身分證號 ][ 輸入 ]  [ 姓  名 ][ 輸入 ] │
+│                                         [ 性  別 ][下拉框] │
+│   [ 生日    ][ 8碼輸入 ] [ 年齡 ] 歲    [ 電  話 ][輸入] │
+│   [ 地址    ][ 縣市下拉 ][縣/市][ 區下拉 ][市/區]           │
+│                                                [ 詳細地址輸入  ]│
+├─────────────────────────────────────────────────────────────┤
+│  ▌SECTION B 掛號資訊 (panel3)                               │
+│   [ 掛號日期 ][ 輸入 ]  [ 科別 ][下拉] [ 時段 ][下拉] [ 醫師 ][下拉] │
+│   ┌──────────────────────────────────────────────────┐      │
+│   │     [ 掛號的號碼 ]     [ 12 ]  (紅字大字型)          │      │
+│   └──────────────────────────────────────────────────┘      │
+├─────────────────────────────────────────────────────────────┤
+│  ▌FOOTER 操作按鈕列 (panel4)                                │
+│       [掛號確認]    [列印掛號單]    [清空螢幕]    [結束/離開]   │
+└─────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────────────────────────┐
-│  ▌HEADER 標題列 (panel1)                            │
-│        憨吉聯合大醫院                                │
-├─────────────────────────────────────────────────────┤
-│  ▌SECTION A 病患基本資料 (panel2)                   │
-│   [ 病歷號碼 ][ 輸入 ]  [ 姓  名 ][ 輸入 ]         │
-│                          [ 性  別 ][下拉] [初診/複診]│
-│   [ 生日    ][ 輸入 ] [ 年齡 ] 歲   [ 電  話 ][輸入]│
-│   [ 地址    ][ 縣市下拉 ][縣/市][ 區下拉 ][市/區]   │
-│                                     [ 詳細地址輸入  ]│
-├─────────────────────────────────────────────────────┤
-│  ▌SECTION B 掛號資訊 (panel3)                       │
-│   [ 掛號日期 ][ 輸入 ]  [ 科別 ][下拉]  [ 醫師][下拉]│
-│   ┌───────────────────────────────────────────┐    │
-│   │  [ 掛號的號碼 ]     [ 12 ]  (紅字大字型)  │    │
-│   └───────────────────────────────────────────┘    │
-├─────────────────────────────────────────────────────┤
-│  ▌FOOTER 操作按鈕列 (panel4)                        │
-│  [掛號確認]  [列印掛號單]  [清空螢幕]  [結束/離開]  │
-└─────────────────────────────────────────────────────┘
-```
 
-### 1.3 欄位對照表
+### 2.2 欄位對照表
 
 | 區域 | 欄位名稱 | 控制項類型 | 說明 |
 |------|---------|-----------|------|
-| A | 病歷號碼 | TextBox | 病患唯一識別碼 |
+| A | 病歷號碼 | TextBox | 內部病歷識別碼 |
+| A | 身分證號 | TextBox | 病患的身分證或居留證號 |
 | A | 姓名 | TextBox | 病患中文姓名 |
 | A | 性別 | ComboBox | 0.女 / 1.男 / 2.中性 / 3.未知 |
-| A | 初診/複診 | Label (按鈕樣式) | 識別就診類型 |
-| A | 生日 | TextBox | 民國年格式 (如 1001120) |
-| A | 年齡 | TextBox (唯讀) | 系統自動計算（橘色底）|
-| A | 電話 | TextBox | 聯絡電話 |
-| A | 地址縣市 | ComboBox | 台北市/新北市/花蓮縣/宜蘭縣 |
-| A | 地址鄉鎮 | ComboBox | 對應縣市的鄉鎮市區 |
-| A | 詳細地址 | TextBox | 路名、街號 |
+| A | 生日 | MaskedTextBox | 強制 8 碼數字輸入 (例: 19901015) |
+| A | 年齡 | TextBox (唯讀) | 系統依生日自動計算 |
+| A | 電話、地址 | TextBox/ComboBox | 聯絡方式與居住地 |
 | B | 掛號日期 | TextBox | 掛號當日日期 |
-| B | 科別 | ComboBox | 1.內科~7.婦產科 |
-| B | 醫師 | ComboBox | 各科醫師代號姓名 |
-| B | 掛號號碼 | TextBox (紅字) | 系統產生的當日號碼 |
-
-### 1.4 配色設計說明
-
-| 色彩 | 用途 | RGB 值 |
-|------|------|--------|
-| 深藍 (`#005A9C`) | 標題欄、標籤列、按鈕列 | [(0, 90, 156)](file:///c:/Users/lan/Desktop/Register/Register/Reg.cs#5-11) |
-| 淺藍 (`#E6F7FF`) | 資料區面板背景 | [(230, 247, 255)](file:///c:/Users/lan/Desktop/Register/Register/Reg.cs#5-11) |
-| 灰白 (`#F0F2F5`) | 視窗整體背景 | [(240, 242, 245)](file:///c:/Users/lan/Desktop/Register/Register/Reg.cs#5-11) |
-| 橘色 (`#FFC080`) | 自動計算的年齡欄位 | [(255, 192, 128)](file:///c:/Users/lan/Desktop/Register/Register/Reg.cs#5-11) |
-| 紅色  | 掛號號碼（醒目顯示）| `Color.Red` |
+| B | 科別 | ComboBox | 動態由 SQLite 載入 |
+| B | 時段 | ComboBox | 動態由 SQLite 載入 (上下晚上) |
+| B | 醫師 | ComboBox | 依所選「科別」與「時段」即時連動篩選 |
 
 ---
 
-## 二、資料結構
+## 三、核心資料模型結構
 
-### 2.1 病患資料模型 (Patient.cs)
+### 3.1 病患模型 (`Patient.cs`)
 
 ```csharp
 public class Patient
 {
-    // ── 身份識別 ──────────────────────────────────────
-    public string IdNumber      { get; set; } = string.Empty; // 病歷號碼
-    public string Name          { get; set; } = string.Empty; // 姓名
-    public string Gender        { get; set; } = string.Empty; // 性別 (0.女/1.男…)
-
-    // ── 基本資料 ──────────────────────────────────────
-    public string BirthDate     { get; set; } = string.Empty; // 生日 (民國年)
-    public int    Age           { get; set; }                 // 年齡 (自動計算)
-    public string Phone         { get; set; } = string.Empty; // 電話
-    public string Address       { get; set; } = string.Empty; // 完整地址
-
-    // ── 掛號資訊 ──────────────────────────────────────
-    public string RegistrationDate { get; set; } = string.Empty; // 掛號日期
-    public string Department       { get; set; } = string.Empty; // 科別
-    public string Doctor           { get; set; } = string.Empty; // 醫師
+    public string IdNumber { get; set; } = string.Empty;   // 病歷號碼
+    public string NationalId { get; set; } = string.Empty; // 身分證/居留證字號
+    public string Name { get; set; } = string.Empty;       // 姓名
+    // 生日限制為 8 碼字串，透過年齡推算轉換
+    public string BirthDate { get; set; } = string.Empty;   
+    public int Age { get; set; }                          
+    // 其他欄位省略...
 }
-```
-
-### 2.2 UI 控制項結構表
-
-```
-Reg (Form)
-├── panel1 (標題列)
-│   └── label1              ← 醫院名稱
-│
-├── panel2 (病患資料區)
-│   ├── label2 / idNumberTextBox    ← 病歷號碼
-│   ├── label3 / nameTextBox        ← 姓名
-│   ├── label5 / genderComboBox     ← 性別
-│   ├── label15                     ← 初診/複診
-│   ├── label4 / birthdayTextBox    ← 生日
-│   ├── label6 / ageTextBox         ← 年齡 (唯讀)
-│   ├── label8 / phoneTextBox       ← 電話
-│   ├── label7 / addressTextBox     ← 詳細地址
-│   ├── label9 / cityComboBox       ← 縣市
-│   └── label10 / districtComboBox  ← 鄉鎮市區
-│
-├── panel3 (掛號資訊區)
-│   ├── label11 / regDateTextBox    ← 掛號日期
-│   ├── label12 / departmentComboBox← 科別
-│   ├── label13 / doctorComboBox    ← 醫師
-│   └── groupBox1 (掛號號碼區)
-│       ├── label14                 ← 標籤「掛號的號碼」
-│       └── regNumberTextBox        ← 號碼顯示 (紅字大字型)
-│
-└── panel4 (按鈕列)
-    ├── confirmButton   ← 掛號確認
-    ├── printButton     ← 列印掛號單
-    ├── clearButton     ← 清空螢幕
-    └── exitButton      ← 結束/離開
-```
-
-### 2.3 下拉選單靜態資料
-
-```
-genderComboBox    → ["0.女", "1.男", "2.中性", "3.未知"]
-cityComboBox      → ["台北市", "新北市", "花蓮縣", "宜蘭縣"]
-departmentComboBox→ ["1.內科", "2.外科", "3.皮膚科", "4.眼科",
-                     "5.牙科", "6.小兒科", "7.婦產科"]
-doctorComboBox    → ["101.趙一", "102.錢二", "103.孫三",
-                     "201.李四", "202.周五", "203.吳六",
-                     "301.鄭七", "302.王八", "303.馮九",
-                     "401.陳十"]
-```
-
----
-
-## 三、系統設計文件
-
-### 3.1 系統架構
-
-```mermaid
-graph TD
-    A[使用者] -->|輸入資料| B[Windows Forms UI\nReg.cs / Reg.Designer.cs]
-    B -->|事件觸發| C[事件處理層\n各 _Click / _TextChanged 方法]
-    C -->|資料封裝| D[資料模型\nPatient.cs]
-    C -->|即時計算| E[年齡運算模組\nBirthdayTextBox_TextChanged]
-    D -->|未來擴充| F[(資料庫\n或 JSON 儲存)]
 ```
 
 ### 3.2 類別職責說明
 
 | 類別 / 檔案 | 職責 |
 |------------|------|
-| [Reg.cs](file:///c:/Users/lan/Desktop/Register/Register/Reg.cs) | UI 事件處理邏輯、商業規則 |
-| [Reg.Designer.cs](file:///c:/Users/lan/Desktop/Register/Register/Reg.Designer.cs) | Visual Studio 自動產生的 UI 初始化程式碼 |
-| [Patient.cs](file:///c:/Users/lan/Desktop/Register/Register/Patient.cs) | 病患資料的 POCO 模型，作為資料傳輸物件 (DTO) |
-| [Program.cs](file:///c:/Users/lan/Desktop/Register/Register/Program.cs) | 應用程式進入點，啟動主表單 |
-
-### 3.3 核心功能實作
-
-#### 3.3.1 年齡自動計算
-
-```
-輸入民國年日期 (如 1001120)
-    ↓
-解析年份部分 → "100" (民國年)
-    ↓
-轉換西元年 = 100 + 1911 = 2011
-    ↓
-計算年齡 = 目前年份 (2026) - 2011 = 15 歲
-    ↓
-更新 ageTextBox.Text = "15"
-```
-
-#### 3.3.2 掛號確認流程
-
-```
-使用者點擊 [掛號確認]
-    ↓
-讀取 nameTextBox.Text
-    ↓
-彈出訊息框「{姓名} 同學，掛號成功！」
-    ↓  (未來擴充)
-封裝 Patient 物件 → 儲存至資料庫
-```
-
-#### 3.3.3 清空螢幕流程
-
-```
-點擊 [清空螢幕]
-    ↓
-清空所有 TextBox (.Clear())
-    ↓
-重設 ComboBox 為預設值
-    ↓
-焦點移回 idNumberTextBox
-```
-
-### 3.4 視窗規格
-
-| 項目 | 規格 |
-|------|------|
-| 技術框架 | .NET 7 Windows Forms |
-| 視窗尺寸 | 1200 × 850 px (ClientSize) |
-| 字體 | 微軟正黑體 (Microsoft JhengHei) |
-| 啟動位置 | 螢幕正中央 (CenterScreen) |
-| 主要字體大小 | 標籤 13.8pt · 標題 22.2pt · 號碼 25.8pt |
+| [DatabaseHelper.cs](file:///c:/Users/lan/Desktop/Register/Register/DatabaseHelper.cs) | 系統啟動時初始化 SQLite 六大資料庫表與填充假資料。 |
+| [Reg.cs](file:///c:/Users/lan/Desktop/Register/Register/Reg.cs) | 主系統入口，處理輸入檢查、動態連動下拉表單、生日年齡計算。 |
+| [DoctorScheduleForm.cs](file:///c:/Users/lan/Desktop/Register/Register/DoctorScheduleForm.cs) | 行政管理頁面 1：羅列所有門診排班（唯讀）。 |
+| [PatientManagementForm.cs](file:///c:/Users/lan/Desktop/Register/Register/PatientManagementForm.cs) | 行政管理頁面 2：顯示看診病患總覽與掛號對應單。 |
+| [DepartmentManagementForm.cs](file:///c:/Users/lan/Desktop/Register/Register/DepartmentManagementForm.cs) | 行政管理頁面 3：檢閱所有科別及其 14 位專任醫師。 |
+| [ReportForm.cs](file:///c:/Users/lan/Desktop/Register/Register/ReportForm.cs) | 行政管理頁面 4：基於 GROUP BY 等查詢，統計各科與各醫師業績。 |
 
 ---
 
-## 四、操作文件
+## 四、操作手冊與功能亮點
 
-### 4.1 系統啟動
-
-1. 開啟執行檔或在 Visual Studio 中按 **F5** 執行偵錯。
-2. 系統自動在螢幕正中央開啟「**憨吉聯合大醫院 — 掛號系統**」視窗。
-3. 預設值：性別 = 女，縣市 = 花蓮縣。
-
----
-
-### 4.2 標準掛號操作流程
-
-```
-① 輸入病歷號碼
-        ↓
-② 輸入姓名
-        ↓
-③ 選擇性別 / 初診或複診
-        ↓
-④ 輸入生日 (民國年格式，如 1001120)
-   → 系統自動計算並填入年齡
-        ↓
-⑤ 輸入電話
-        ↓
-⑥ 選擇縣市 → 選擇鄉鎮區 → 輸入詳細地址
-        ↓
-⑦ 輸入掛號日期
-        ↓
-⑧ 選擇科別
-        ↓
-⑨ 選擇醫師
-        ↓
-⑩ 確認掛號號碼（紅色大字）
-        ↓
-⑪ 點擊 [掛號確認] 完成掛號
-```
-
----
-
-### 4.3 各按鈕功能說明
-
-| 按鈕 | 功能 | 快捷提示 |
-|------|------|---------|
-| **掛號確認** | 顯示掛號成功訊息（未來可連接資料庫儲存）| 確認所有欄位填寫正確後按下 |
-| **列印掛號單** | 列印當前掛號資料（目前顯示提示訊息）| 掛號確認後操作 |
-| **清空螢幕** | 清除所有欄位並重設下拉選單 | 需要輸入下一位病患時使用 |
-| **結束/離開** | 關閉整個掛號程式 | 工作結束時使用 |
-
----
-
-### 4.4 生日輸入格式說明
-
+### 4.1 嚴謹的生日驗證機制
 > [!IMPORTANT]
-> 生日請使用「**民國年格式**」，格式為 `YYYMMDD`（7 位數）  
-> 例如：民國 100 年 11 月 20 日 → 輸入 **1001120**
+> 生日欄位為確保資料傳輸正確，已轉換為強制的 `MaskedTextBox`。  
+> 格式限定為：`YYYMMDD`（純數字 7 碼的民國年格式）。
+> 範例：若為民國 92 年 1 月 1 日，**必須輸入 `0920101`**。
 
-| 輸入值 | 計算結果 | 說明 |
-|--------|---------|------|
-| `1001120` | 年齡 15 歲 | 民國 100 年生 = 西元 2011 年 |
-| `0891001` | 年齡 37 歲 | 民國 89 年生 = 西元 2000 年 |
-| `0500315` | 年齡 75 歲 | 民國 50 年生 = 西元 1961 年 |
+### 4.2 智慧門診篩選功能
+掛號資訊區（組塊 B）支援智慧型連動篩選：
+1. 使用者首先於 **【科別】** (Department) 下拉選單選取欲掛入的科別 (例如：外科)。
+2. 使用者接著於 **【時段】** (TimeSlot) 下拉選單選擇時段 (例如：早上)。
+3. 系統即刻執行 SQLite 內部聯集查詢 (`JOIN DoctorSchedules`)。
+4. 最後，**【醫師】** (Doctor) 下拉選單只會列出現有排班且符合該科別定義的醫師，免除誤選錯誤。
 
----
-
-### 4.5 科別與醫師對照
-
-| 科別代碼 | 科別名稱 | 醫師代號 | 醫師姓名 |
-|---------|---------|---------|---------|
-| 1 | 內科 | 101、102、103 | 趙一、錢二、孫三 |
-| 2 | 外科 | 201、202、203 | 李四、周五、吳六 |
-| 3 | 皮膚科 | 301、302、303 | 鄭七、王八、馮九 |
-| 4 | 眼科 | 401 | 陳十 |
-| 5 | 牙科 | — | — |
-| 6 | 小兒科 | — | — |
-| 7 | 婦產科 | — | — |
+### 4.3 管理報表的啟用
+在主畫面的上方標題列，設置了四個切換按鈕 `[科別管理]` `[排班管理]` `[病患總覽]` `[統計報表]`。點擊任一按鈕，將會跳出 Modal 視窗 (ShowDialog)。每一個管理表單內建獨立的 `DataGridView` 查詢介面，方便櫃台人員隨時進行掛號查核。
 
 ---
-
-### 4.6 常見問題
-
-| 問題 | 原因 | 解決方式 |
-|------|------|---------|
-| 年齡欄位沒有自動填入 | 生日輸入位數不足（需 ≥ 3 位）| 確認輸入至少前 3 位年份 |
-| 清空後焦點不回到病歷號 | 正常行為，系統自動聚焦 | 確認視窗在前景 |
-| 列印無法使用 | 功能尚在開發中 | 等待後續版本更新 |
-
----
-
-*文件產生日期：2026-03-24*
+*文件更新：2026-03-24  (配合 v2.0 架構大更新全面修訂)*

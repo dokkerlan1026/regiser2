@@ -6,9 +6,14 @@ namespace Register
 	public class Patient
 	{
 		/// <summary>
-		/// 身份證字號。
+		/// 病歷號碼。
 		/// </summary>
 		public string IdNumber { get; set; } = string.Empty;
+
+		/// <summary>
+		/// 身分證/居留證字號。
+		/// </summary>
+		public string NationalId { get; set; } = string.Empty;
 
 		/// <summary>
 		/// 姓名。

@@ -30,6 +30,10 @@
 		{
 			panel1 = new Panel();
 			label1 = new Label();
+			btnSchedule = new Button();
+			btnPatients = new Button();
+			btnDept = new Button();
+			btnReport = new Button();
 			panel2 = new Panel();
 			label10 = new Label();
 			label9 = new Label();
@@ -38,8 +42,10 @@
 			phoneTextBox = new TextBox();
 			nameTextBox = new TextBox();
 			addressTextBox = new TextBox();
-			birthdayTextBox = new TextBox();
+			birthdayTextBox = new MaskedTextBox(); // 將其改為 MaskedTextBox
 			idNumberTextBox = new TextBox();
+			nationalIdTextBox = new TextBox(); // 新增身分證
+			label16 = new Label();             // 新增身分證標籤
 			genderComboBox = new ComboBox();
 			label8 = new Label();
 			label7 = new Label();
@@ -57,6 +63,8 @@
 			label13 = new Label();
 			label12 = new Label();
 			departmentComboBox = new ComboBox();
+			timeSlotComboBox = new ComboBox(); // 新增時段
+			label17 = new Label();             // 新增時段標籤
 			regDateTextBox = new TextBox();
 			label11 = new Label();
 			panel4 = new Panel();
@@ -75,6 +83,10 @@
 			// panel1
 			// 
 			panel1.BackColor = Color.FromArgb(0, 90, 156);
+			panel1.Controls.Add(btnDept);
+			panel1.Controls.Add(btnSchedule);
+			panel1.Controls.Add(btnPatients);
+			panel1.Controls.Add(btnReport);
 			panel1.Controls.Add(label1);
 			panel1.Location = new Point(100, 20);
 			panel1.Name = "panel1";
@@ -85,15 +97,61 @@
 			// 
 			label1.Font = new Font("微軟正黑體", 22.2F, FontStyle.Bold, GraphicsUnit.Point);
 			label1.ForeColor = Color.White;
-			label1.Location = new Point(330, 25);
+			label1.Location = new Point(120, 25);
 			label1.Name = "label1";
 			label1.Size = new Size(323, 39);
 			label1.TabIndex = 0;
 			label1.Text = "憨吉聯合大醫院";
 			// 
+			// btnDept
+			// 
+			btnDept.Font = new Font("微軟正黑體", 11F, FontStyle.Regular, GraphicsUnit.Point);
+			btnDept.Location = new Point(530, 25);
+			btnDept.Name = "btnDept";
+			btnDept.Size = new Size(100, 40);
+			btnDept.TabIndex = 4;
+			btnDept.Text = "科別管理";
+			btnDept.UseVisualStyleBackColor = true;
+			btnDept.Click += BtnDept_Click;
+			// 
+			// btnSchedule
+			// 
+			btnSchedule.Font = new Font("微軟正黑體", 11F, FontStyle.Regular, GraphicsUnit.Point);
+			btnSchedule.Location = new Point(640, 25);
+			btnSchedule.Name = "btnSchedule";
+			btnSchedule.Size = new Size(100, 40);
+			btnSchedule.TabIndex = 1;
+			btnSchedule.Text = "排班管理";
+			btnSchedule.UseVisualStyleBackColor = true;
+			btnSchedule.Click += BtnSchedule_Click;
+			// 
+			// btnPatients
+			// 
+			btnPatients.Font = new Font("微軟正黑體", 11F, FontStyle.Regular, GraphicsUnit.Point);
+			btnPatients.Location = new Point(750, 25);
+			btnPatients.Name = "btnPatients";
+			btnPatients.Size = new Size(100, 40);
+			btnPatients.TabIndex = 2;
+			btnPatients.Text = "病患總覽";
+			btnPatients.UseVisualStyleBackColor = true;
+			btnPatients.Click += BtnPatients_Click;
+			// 
+			// btnReport
+			// 
+			btnReport.Font = new Font("微軟正黑體", 11F, FontStyle.Regular, GraphicsUnit.Point);
+			btnReport.Location = new Point(860, 25);
+			btnReport.Name = "btnReport";
+			btnReport.Size = new Size(100, 40);
+			btnReport.TabIndex = 5;
+			btnReport.Text = "統計報表";
+			btnReport.UseVisualStyleBackColor = true;
+			btnReport.Click += BtnReport_Click;
+			// 
 			// panel2
 			// 
 			panel2.BackColor = Color.FromArgb(230, 247, 255);
+			panel2.Controls.Add(nationalIdTextBox);
+			panel2.Controls.Add(label16);
 			panel2.Controls.Add(label15);
 			panel2.Controls.Add(label10);
 			panel2.Controls.Add(label9);
@@ -175,9 +233,9 @@
 			// 
 			nameTextBox.BorderStyle = BorderStyle.FixedSingle;
 			nameTextBox.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-			nameTextBox.Location = new Point(460, 27);
+			nameTextBox.Location = new Point(710, 27);
 			nameTextBox.Name = "nameTextBox";
-			nameTextBox.Size = new Size(180, 35);
+			nameTextBox.Size = new Size(120, 35);
 			nameTextBox.TabIndex = 12;
 			nameTextBox.Text = "趙大同";
 			// 
@@ -199,7 +257,9 @@
 			birthdayTextBox.Name = "birthdayTextBox";
 			birthdayTextBox.Size = new Size(160, 35);
 			birthdayTextBox.TabIndex = 10;
-			birthdayTextBox.Text = "1001120";
+			birthdayTextBox.Text = "0920101";
+			birthdayTextBox.Mask = "0000000";
+			birthdayTextBox.PromptChar = '_';
 			birthdayTextBox.TextChanged += BirthdayTextBox_TextChanged;
 			// 
 			// idNumberTextBox
@@ -210,17 +270,39 @@
 			idNumberTextBox.Name = "idNumberTextBox";
 			idNumberTextBox.Size = new Size(160, 35);
 			idNumberTextBox.TabIndex = 9;
-			idNumberTextBox.Text = "U123456789";
+			idNumberTextBox.Text = "123456";
 			idNumberTextBox.TextChanged += IdNumberTextBox_TextChanged;
+			//
+			// nationalIdTextBox
+			//
+			nationalIdTextBox.BorderStyle = BorderStyle.FixedSingle;
+			nationalIdTextBox.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
+			nationalIdTextBox.Location = new Point(450, 27);
+			nationalIdTextBox.Name = "nationalIdTextBox";
+			nationalIdTextBox.Size = new Size(160, 35);
+			nationalIdTextBox.TabIndex = 21;
+			nationalIdTextBox.Text = "A123456789";
+			//
+			// label16
+			//
+			label16.BackColor = Color.FromArgb(230, 247, 255);
+			label16.BorderStyle = BorderStyle.FixedSingle;
+			label16.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
+			label16.Location = new Point(340, 27);
+			label16.Name = "label16";
+			label16.Size = new Size(100, 35);
+			label16.TabIndex = 20;
+			label16.Text = "身分證號";
+			label16.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// genderComboBox
 			// 
 			genderComboBox.Font = new Font("微軟正黑體", 12F, FontStyle.Regular, GraphicsUnit.Point);
 			genderComboBox.FormattingEnabled = true;
 			genderComboBox.Items.AddRange(new object[] { "0.女", "1.男", "2.中性", "3.未知" });
-			genderComboBox.Location = new Point(760, 27);
+			genderComboBox.Location = new Point(920, 27);
 			genderComboBox.Name = "genderComboBox";
-			genderComboBox.Size = new Size(100, 35);
+			genderComboBox.Size = new Size(80, 35);
 			genderComboBox.TabIndex = 8;
 			// 
 			// label8
@@ -274,11 +356,11 @@
 			label5.BackColor = Color.FromArgb(230, 247, 255);
 			label5.BorderStyle = BorderStyle.FixedSingle;
 			label5.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-			label5.Location = new Point(680, 27);
+			label5.Location = new Point(840, 27);
 			label5.Name = "label5";
 			label5.Size = new Size(72, 35);
 			label5.TabIndex = 3;
-			label5.Text = "性 別";
+			label5.Text = "性別";
 			label5.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// label4
@@ -298,11 +380,11 @@
 			label3.BackColor = Color.FromArgb(230, 247, 255);
 			label3.BorderStyle = BorderStyle.FixedSingle;
 			label3.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
-			label3.Location = new Point(360, 27);
+			label3.Location = new Point(620, 27);
 			label3.Name = "label3";
-			label3.Size = new Size(96, 35);
+			label3.Size = new Size(80, 35);
 			label3.TabIndex = 1;
-			label3.Text = "姓   名";
+			label3.Text = "姓名";
 			label3.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// label2
@@ -323,6 +405,8 @@
 			panel3.Controls.Add(groupBox1);
 			panel3.Controls.Add(doctorComboBox);
 			panel3.Controls.Add(label13);
+			panel3.Controls.Add(timeSlotComboBox);
+			panel3.Controls.Add(label17);
 			panel3.Controls.Add(label12);
 			panel3.Controls.Add(departmentComboBox);
 			panel3.Controls.Add(regDateTextBox);
@@ -372,10 +456,9 @@
 			// 
 			doctorComboBox.Font = new Font("微軟正黑體", 12F, FontStyle.Regular, GraphicsUnit.Point);
 			doctorComboBox.FormattingEnabled = true;
-			doctorComboBox.Items.AddRange(new object[] { "101.趙一", "102.錢二", "103.孫三", "201.李四", "202.周五", "203.吳六", "301.鄭七", "302.王八", "303.馮九", "401.陳十" });
-			doctorComboBox.Location = new Point(760, 17);
+			doctorComboBox.Location = new Point(960, 17);
 			doctorComboBox.Name = "doctorComboBox";
-			doctorComboBox.Size = new Size(160, 35);
+			doctorComboBox.Size = new Size(120, 35);
 			doctorComboBox.TabIndex = 14;
 			// 
 			// label13
@@ -384,12 +467,34 @@
 			label13.BorderStyle = BorderStyle.FixedSingle;
 			label13.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
 			label13.ForeColor = Color.White;
-			label13.Location = new Point(660, 20);
+			label13.Location = new Point(880, 20);
 			label13.Name = "label13";
-			label13.Size = new Size(100, 35);
+			label13.Size = new Size(70, 35);
 			label13.TabIndex = 13;
 			label13.Text = "醫 師";
 			label13.TextAlign = ContentAlignment.MiddleCenter;
+			// 
+			// timeSlotComboBox
+			// 
+			timeSlotComboBox.Font = new Font("微軟正黑體", 12F, FontStyle.Regular, GraphicsUnit.Point);
+			timeSlotComboBox.FormattingEnabled = true;
+			timeSlotComboBox.Location = new Point(730, 17);
+			timeSlotComboBox.Name = "timeSlotComboBox";
+			timeSlotComboBox.Size = new Size(140, 35);
+			timeSlotComboBox.TabIndex = 23;
+			// 
+			// label17
+			// 
+			label17.BackColor = Color.FromArgb(0, 90, 156);
+			label17.BorderStyle = BorderStyle.FixedSingle;
+			label17.Font = new Font("微軟正黑體", 13.8F, FontStyle.Regular, GraphicsUnit.Point);
+			label17.ForeColor = Color.White;
+			label17.Location = new Point(640, 20);
+			label17.Name = "label17";
+			label17.Size = new Size(80, 35);
+			label17.TabIndex = 22;
+			label17.Text = "時 段";
+			label17.TextAlign = ContentAlignment.MiddleCenter;
 			// 
 			// label12
 			// 
@@ -408,7 +513,6 @@
 			// 
 			departmentComboBox.Font = new Font("微軟正黑體", 12F, FontStyle.Regular, GraphicsUnit.Point);
 			departmentComboBox.FormattingEnabled = true;
-			departmentComboBox.Items.AddRange(new object[] { "1.內科", "2.外科", "3.皮膚科", "4.眼科", "5.牙科", "6.小兒科", "7.婦產科" });
 			departmentComboBox.Location = new Point(460, 17);
 			departmentComboBox.Name = "departmentComboBox";
 			departmentComboBox.Size = new Size(160, 35);
@@ -422,7 +526,7 @@
 			regDateTextBox.Name = "regDateTextBox";
 			regDateTextBox.Size = new Size(160, 35);
 			regDateTextBox.TabIndex = 10;
-			regDateTextBox.Text = "U123456789";
+			regDateTextBox.Text = "";
 			// 
 			// label11
 			// 
@@ -499,9 +603,9 @@
 			label15.BorderStyle = BorderStyle.FixedSingle;
 			label15.Font = new Font("微軟正黑體", 12F, FontStyle.Regular, GraphicsUnit.Point);
 			label15.ForeColor = Color.White;
-			label15.Location = new Point(870, 27);
+			label15.Location = new Point(480, 115);
 			label15.Name = "label15";
-			label15.Size = new Size(160, 35);
+			label15.Size = new Size(120, 35);
 			label15.TabIndex = 18;
 			label15.Text = "初診/複診";
 			label15.TextAlign = ContentAlignment.MiddleCenter;
@@ -552,7 +656,7 @@
 		private TextBox phoneTextBox;
 		private TextBox nameTextBox;
 		private TextBox addressTextBox;
-		private TextBox birthdayTextBox;
+		private MaskedTextBox birthdayTextBox;
 		private Label label9;
 		private ComboBox districtComboBox;
 		private ComboBox cityComboBox;
@@ -571,5 +675,13 @@
 		private TextBox regNumberTextBox;
 		private Button printButton;
 		private Label label15;
+		private TextBox nationalIdTextBox;
+		private Label label16;
+		private ComboBox timeSlotComboBox;
+		private Label label17;
+		private Button btnSchedule;
+		private Button btnPatients;
+		private Button btnDept;
+		private Button btnReport;
 	}
 }
