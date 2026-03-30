@@ -1,4 +1,29 @@
-![憨吉聯合大醫院](憨吉聯合大醫院.png)
+
+
+## 純前端版本
+
+- 新系統入口：`web/index.html`
+- 系統明文件：`docs/憨吉聯合大醫院系統明文件.md`
+- 正式交付版：`docs/系統文件_正式交付版.md`
+- 資料庫檔案結構：`docs/資料庫檔案結構.md`
+- 系統分頁與功能說明：`docs/系統分頁與功能說明.md`
+- 系統規格：`docs/系統規格.md`
+- 可直接在瀏覽器執行，資料儲存在 `localStorage`
+- 子系統頁面：
+  - `web/presentation.html`（PPT 互動簡報：逐頁介紹四大系統與小功能）
+  - `web/data-management.html`（個人資料修改：身分證號 + 健保卡號驗證）
+  - `web/registration.html`（掛號）
+  - `web/lookup.html`（查詢/退掛/轉掛）
+  - `web/departments.html`（科別管理）
+  - `web/schedule.html`（排班管理）
+  - `web/rules.html`（規則排班/給號設定）
+  - `web/patients.html`（病患總覽）
+  - `web/orders.html`（門急診醫囑）
+  - `web/billing.html`（批價收費）
+  - `web/reports.html`（統計報表）
+  - `web/announcements.html`（公告管理）
+
+---
 
 # 憨吉聯合大醫院掛號系統 — 完整說明文件
 
@@ -183,5 +208,7 @@ public class Patient
 
 ---
 *文件更新：2026-03-24  (升級為 SQL Server 架構並實裝掛號派號等業務邏輯)*
+
+# regiser2
 
 
