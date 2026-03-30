@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理系統 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>管理系統</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html" class="active">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./management-system.html" class="active">管理系統首頁</a>
+      <a href="./departments.html">科別管理</a>
+      <a href="./schedule.html">排班管理</a>
+      <a href="./rules.html">規則與給號</a>
+      <a href="./announcements.html">公告管理</a>
+      <a href="./data-management.html">資料管理</a>
+      <a href="./index.html">系統入口</a>
+    </nav>
+    <main>
+      <section class="grid two">
+        <article class="card"><h2>科別管理</h2><p>維護科別與醫師清單。</p><a href="./departments.html">前往科別管理</a></article>
+        <article class="card"><h2>排班管理</h2><p>維護醫師各時段排班。</p><a href="./schedule.html">前往排班管理</a></article>
+        <article class="card"><h2>規則與給號</h2><p>設定規則排班與給號參數。</p><a href="./rules.html">前往規則與給號</a></article>
+        <article class="card"><h2>公告管理</h2><p>發布院內最新公告。</p><a href="./announcements.html">前往公告管理</a></article>
+        <article class="card"><h2>資料管理</h2><p>匯入、匯出、重置系統資料。</p><a href="./data-management.html">前往資料管理</a></article>
+      </section>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

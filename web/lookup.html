@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>查詢退掛轉掛 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>查詢 / 退掛 / 轉掛</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html" class="active">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./patient-system.html">病人系統首頁</a>
+      <a href="./registration.html">門診掛號</a>
+      <a href="./lookup.html" class="active">查詢/退掛/轉掛</a>
+      <a href="./patients.html">病患總覽</a>
+      <a href="./announcements.html">公告管理</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <article class="card">
+        <h2>掛號查詢 / 退掛 / 轉掛</h2>
+        <div class="field-row">
+          <input id="lookup-keyword" placeholder="姓名 / 身分證 / 病歷號" />
+          <input id="lookup-date" type="date" />
+          <button id="btn-lookup">查詢</button>
+        </div>
+        <div class="table-wrap"><table id="lookup-table"></table></div>
+      </article>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

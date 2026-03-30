@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>系統導覽簡報 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .deck {
+        margin-top: 16px;
+      }
+      .slide {
+        display: none;
+      }
+      .slide.active {
+        display: block;
+      }
+      .slide-card {
+        min-height: 56vh;
+      }
+      .slide-title {
+        margin: 0 0 8px;
+        color: var(--brand-dark);
+      }
+      .slide-sub {
+        margin: 0 0 12px;
+        color: var(--muted);
+      }
+      .slide-list {
+        margin: 0;
+        padding-left: 18px;
+        line-height: 1.8;
+      }
+      .deck-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+      .deck-progress {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .dot-wrap {
+        margin-top: 10px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        border: 1px solid #9ecdbd;
+        background: #eaf6f1;
+        cursor: pointer;
+      }
+      .dot.active {
+        background: var(--brand);
+        border-color: var(--brand-dark);
+      }
+      .key-tip {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1>
+        <p>系統互動簡報（PPT 風格）</p>
+      </div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+
+    <nav class="site-nav">
+      <a href="./index.html">系統入口</a>
+      <a href="./presentation.html" class="active">互動簡報</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+
+    <main>
+      <section class="deck" id="deck">
+        <article class="card slide slide-card active">
+          <h2 class="slide-title">01 / 簡報封面</h2>
+          <p class="slide-sub">憨吉聯合大醫院 - 系統導覽</p>
+          <ul class="slide-list">
+            <li>目的：完整介紹四大系統與每個分頁的小功能。</li>
+            <li>系統順序：病人系統 → 批價櫃台 → 醫生系統 → 管理系統。</li>
+            <li>播放方式：按下方按鈕，或使用鍵盤左右鍵切換。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">02 / 系統總覽架構</h2>
+          <p class="slide-sub">分流設計與權責範圍</p>
+          <ul class="slide-list">
+            <li>病人系統：掛號、查詢退轉掛、病患總覽、公告。</li>
+            <li>批價櫃台：批價收費、收據列印、統計報表、櫃台查詢。</li>
+            <li>醫生系統：科別管理、排班、規則與給號、醫囑。</li>
+            <li>管理系統：行政入口、資料管理、公告與配置維護。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">03 / 病人系統首頁</h2>
+          <p class="slide-sub">病人側主要入口</p>
+          <ul class="slide-list">
+            <li>快速連結到掛號、查詢/退掛/轉掛、病患總覽、公告。</li>
+            <li>適合掛號人員與病人服務櫃台操作。</li>
+            <li>導覽與其餘系統分離，避免功能混淆。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">04 / 門診掛號頁</h2>
+          <p class="slide-sub">病人資料 + 掛號資訊雙區塊</p>
+          <ul class="slide-list">
+            <li>步驟流程：院區 → 科別/醫師 → 日期 → 確認掛號。</li>
+            <li>初診強制填寫健保卡號，複診可自動帶入歷史資料。</li>
+            <li>自動給病歷號、計算掛號號碼、可列印正式掛號單。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">05 / 查詢 / 退掛 / 轉掛</h2>
+          <p class="slide-sub">掛號異動中心</p>
+          <ul class="slide-list">
+            <li>可用姓名、身分證、病歷號與日期過濾掛號紀錄。</li>
+            <li>退掛需寫入退掛原因並保留歷史。</li>
+            <li>轉掛可複製原掛號資料到新日期並保留關聯。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">06 / 病患總覽</h2>
+          <p class="slide-sub">病患主檔彙整</p>
+          <ul class="slide-list">
+            <li>顯示病歷號、身分證、健保卡號、基本資料與聯絡資訊。</li>
+            <li>顯示最近掛號日，方便櫃台快速辨識回診狀態。</li>
+            <li>作為資料核對與追蹤入口。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">07 / 公告管理（病人端關聯）</h2>
+          <p class="slide-sub">院內訊息發布與查詢</p>
+          <ul class="slide-list">
+            <li>可新增公告標題與內容。</li>
+            <li>公告列表可刪除，供管理員維護。</li>
+            <li>病人系統可直接查看最新公告內容。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">08 / 批價櫃台首頁</h2>
+          <p class="slide-sub">收費相關功能入口</p>
+          <ul class="slide-list">
+            <li>集中連到批價收費、統計報表、掛號查詢。</li>
+            <li>適合櫃台收費與管理人員使用。</li>
+            <li>避免與病人掛號資料輸入流程混在一起。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">09 / 批價收費頁</h2>
+          <p class="slide-sub">費用試算與收據輸出</p>
+          <ul class="slide-list">
+            <li>依掛號紀錄帶出費用結構（掛號費、診察費、部分負擔）。</li>
+            <li>根據身份別與折扣別計算應收總額。</li>
+            <li>收費完成可列印正式收據樣板。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">10 / 統計報表頁</h2>
+          <p class="slide-sub">營運數據可視化</p>
+          <ul class="slide-list">
+            <li>指標卡：有效掛號、病患數、醫囑筆數、收費總額。</li>
+            <li>科別掛號量表與醫師掛號/收入表。</li>
+            <li>提供管理決策與櫃台日常追蹤。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">11 / 醫生系統首頁</h2>
+          <p class="slide-sub">醫師作業入口</p>
+          <ul class="slide-list">
+            <li>連到科別管理、排班管理、規則與給號、門急診醫囑。</li>
+            <li>面向醫師與醫療行政的排程與醫囑工作。</li>
+            <li>與批價/病人輸入流程分離，減少誤操作。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">12 / 科別管理</h2>
+          <p class="slide-sub">科別與醫師主檔管理</p>
+          <ul class="slide-list">
+            <li>可新增科別、新增醫師並指定科別。</li>
+            <li>刪除科別限制：底下仍有醫師不可刪除。</li>
+            <li>刪除醫師限制：若已有掛號紀錄不可刪除。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">13 / 排班管理</h2>
+          <p class="slide-sub">醫師與時段對應維護</p>
+          <ul class="slide-list">
+            <li>選醫師 + 時段新增排班。</li>
+            <li>顯示完整排班代碼、科別、時段資訊。</li>
+            <li>支援刪除排班，供行政異動。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">14 / 規則與給號</h2>
+          <p class="slide-sub">規則排班 + 給號參數</p>
+          <ul class="slide-list">
+            <li>可設定星期、醫師、時段與限掛人數。</li>
+            <li>可調整起始號、預約限額、總限額、給號方式。</li>
+            <li>提供掛號系統自動派號邏輯基礎。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">15 / 門急診醫囑</h2>
+          <p class="slide-sub">醫囑開立與金額基礎</p>
+          <ul class="slide-list">
+            <li>醫囑類型：藥品、處置、治療、檢查、醫材、其他。</li>
+            <li>總量公式：劑量 × 頻率 × 天數。</li>
+            <li>單價與小計供批價櫃台收費試算使用。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">16 / 管理系統首頁</h2>
+          <p class="slide-sub">跨系統行政控制台</p>
+          <ul class="slide-list">
+            <li>行政人員入口：科別、排班、規則、公告、資料管理。</li>
+            <li>負責制度面與系統設定維運。</li>
+            <li>與醫師系統部分功能重疊，偏「管理角度」。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">17 / 資料管理（個人資料修改）</h2>
+          <p class="slide-sub">身份驗證後開放個資修改</p>
+          <ul class="slide-list">
+            <li>驗證條件：身分證號 + 健保卡號。</li>
+            <li>驗證成功後可更新姓名、聯絡資訊、地址、生日等資料。</li>
+            <li>資料異動直接回寫病患主檔，供掛號/批價即時使用。</li>
+          </ul>
+        </article>
+
+        <article class="card slide slide-card">
+          <h2 class="slide-title">18 / 簡報結語</h2>
+          <p class="slide-sub">全流程已覆蓋</p>
+          <ul class="slide-list">
+            <li>四大系統與分頁功能已完整導覽。</li>
+            <li>可作為教育訓練、交接簡報、專題展示頁。</li>
+            <li>後續可再加：自動播放、講者備註、列印簡報版。</li>
+          </ul>
+        </article>
+      </section>
+
+      <div class="deck-controls">
+        <div class="actions">
+          <button id="btn-prev">上一張</button>
+          <button id="btn-next" class="primary">下一張</button>
+        </div>
+        <div class="deck-progress" id="deck-progress">1 / 18</div>
+      </div>
+      <div class="dot-wrap" id="dot-wrap"></div>
+      <div class="key-tip">快捷鍵：← / → 切換投影片，Home 回第一張，End 到最後一張</div>
+    </main>
+
+    <div id="toast"></div>
+    <script>
+      (() => {
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const btnPrev = document.getElementById("btn-prev");
+        const btnNext = document.getElementById("btn-next");
+        const progress = document.getElementById("deck-progress");
+        const dotWrap = document.getElementById("dot-wrap");
+        let index = 0;
+
+        function renderDots() {
+          dotWrap.innerHTML = slides
+            .map((_, i) => `<button class="dot${i === index ? " active" : ""}" data-i="${i}" title="第${i + 1}張"></button>`)
+            .join("");
+        }
+
+        function show(i) {
+          index = Math.max(0, Math.min(i, slides.length - 1));
+          slides.forEach((slide, idx) => slide.classList.toggle("active", idx === index));
+          progress.textContent = `${index + 1} / ${slides.length}`;
+          renderDots();
+        }
+
+        btnPrev.addEventListener("click", () => show(index - 1));
+        btnNext.addEventListener("click", () => show(index + 1));
+        dotWrap.addEventListener("click", (e) => {
+          const target = e.target;
+          if (!(target instanceof HTMLElement)) return;
+          const i = Number(target.dataset.i);
+          if (!Number.isNaN(i)) show(i);
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowRight") show(index + 1);
+          if (e.key === "ArrowLeft") show(index - 1);
+          if (e.key === "Home") show(0);
+          if (e.key === "End") show(slides.length - 1);
+        });
+
+        show(0);
+      })();
+    </script>
+  </body>
+</html>

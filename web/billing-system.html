@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>批價櫃台 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>批價櫃台</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html" class="active">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./billing-system.html" class="active">批價櫃台首頁</a>
+      <a href="./billing.html">批價收費</a>
+      <a href="./reports.html">統計報表</a>
+      <a href="./lookup.html">掛號查詢</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <section class="grid two">
+        <article class="card"><h2>批價收費</h2><p>試算、確認收費與收據列印。</p><a href="./billing.html">前往批價收費</a></article>
+        <article class="card"><h2>統計報表</h2><p>查看科別、醫師量能與收入報表。</p><a href="./reports.html">前往統計報表</a></article>
+        <article class="card"><h2>掛號查詢</h2><p>櫃台可快速查詢與取消掛號。</p><a href="./lookup.html">前往查詢/退掛/轉掛</a></article>
+      </section>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

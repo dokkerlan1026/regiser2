@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>病人系統 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>病人系統</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html" class="active">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./patient-system.html" class="active">病人系統首頁</a>
+      <a href="./registration.html">門診掛號</a>
+      <a href="./lookup.html">查詢/退掛/轉掛</a>
+      <a href="./patients.html">病患總覽</a>
+      <a href="./announcements.html">公告管理</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <section class="grid two">
+        <article class="card"><h2>門診掛號</h2><p>建立初診/複診、選院區與自動給號。</p><a href="./registration.html">前往掛號</a></article>
+        <article class="card"><h2>查詢 / 退掛 / 轉掛</h2><p>查詢掛號記錄與異動。</p><a href="./lookup.html">前往查詢/退掛/轉掛</a></article>
+        <article class="card"><h2>病患總覽</h2><p>檢視病患基本資料與就醫狀態。</p><a href="./patients.html">前往病患總覽</a></article>
+        <article class="card"><h2>公告查詢</h2><p>查看院內最新公告。</p><a href="./announcements.html">前往公告</a></article>
+      </section>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

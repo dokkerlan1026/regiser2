@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>憨吉聯合大醫院系統入口</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1>
+        <p>系統入口首頁</p>
+      </div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+
+    <nav class="site-nav">
+      <a href="./patient-system.html">病人系統</a>
+      <a href="./billing-system.html">批價櫃台</a>
+      <a href="./doctor-system.html">醫生系統</a>
+      <a href="./management-system.html">管理系統</a>
+      <a href="./index.html" class="active">系統入口</a>
+      <a href="./presentation.html">互動簡報</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+
+    <main>
+      <section class="home-banner" style="margin-bottom: 16px">
+        <article class="card">
+          <h2>快速服務</h2>
+          <div class="service-grid">
+            <a class="service-tile" href="./registration.html"><span class="icon">🩺</span><span class="txt">門診掛號</span></a>
+            <a class="service-tile" href="./lookup.html"><span class="icon">🔍</span><span class="txt">掛號查詢</span></a>
+            <a class="service-tile" href="./departments.html"><span class="icon">🏥</span><span class="txt">看哪一科</span></a>
+            <a class="service-tile" href="./reports.html"><span class="icon">📈</span><span class="txt">統計報表</span></a>
+            <a class="service-tile" href="./billing.html"><span class="icon">💳</span><span class="txt">批價收費</span></a>
+            <a class="service-tile" href="./announcements.html"><span class="icon">📢</span><span class="txt">最新公告</span></a>
+          </div>
+        </article>
+        <article class="hero-panel">
+          <h2>憨吉聯合大醫院智慧門診平台</h2>
+          <p>整合掛號、排班、病患、醫囑、批價與報表，提供櫃台與後台的一站式作業流程。</p>
+          <div class="hero-chip-row">
+            <span class="hero-chip">網路掛號</span>
+            <span class="hero-chip">看診進度</span>
+            <span class="hero-chip">醫囑管理</span>
+            <span class="hero-chip">收費試算</span>
+            <span class="hero-chip">報表分析</span>
+            <span class="hero-chip">公告管理</span>
+          </div>
+          <p>建議由左側「快速服務」進入你要操作的系統頁面。</p>
+        </article>
+      </section>
+
+      <article class="card">
+        <h2>系統總覽</h2>
+        <p>請由下方功能卡片進入各子系統。</p>
+        <div class="stats" id="report-cards"></div>
+      </article>
+
+      <section class="grid two" style="margin-top: 16px">
+        <article class="card">
+          <h2>門診掛號</h2>
+          <p>建立初診/複診、帶入病患資料、自動給號。</p>
+          <a href="./registration.html">前往掛號系統</a>
+        </article>
+        <article class="card">
+          <h2>查詢 / 退掛 / 轉掛</h2>
+          <p>查詢掛號歷史，處理退掛與跨日轉掛。</p>
+          <a href="./lookup.html">前往查詢系統</a>
+        </article>
+        <article class="card">
+          <h2>科別管理</h2>
+          <p>管理科別資料與轄下醫師名單。</p>
+          <a href="./departments.html">前往科別管理</a>
+        </article>
+        <article class="card">
+          <h2>排班與規則</h2>
+          <p>管理醫師排班、規則排班與給號設定。</p>
+          <a href="./schedule.html">前往排班管理</a> /
+          <a href="./rules.html">前往規則與給號</a>
+        </article>
+        <article class="card">
+          <h2>病患與醫囑</h2>
+          <p>檢視病患總覽與門(急)診醫囑內容。</p>
+          <a href="./patients.html">病患總覽</a> /
+          <a href="./orders.html">醫囑系統</a>
+        </article>
+        <article class="card">
+          <h2>批價與報表</h2>
+          <p>批價收費與統計報表分析。</p>
+          <a href="./billing.html">批價系統</a> /
+          <a href="./reports.html">統計報表</a>
+        </article>
+        <article class="card">
+          <h2>互動簡報</h2>
+          <p>一張一張播放，完整介紹四大系統與小功能。</p>
+          <a href="./presentation.html">前往互動簡報</a>
+        </article>
+        <article class="card">
+          <h2>公告管理</h2>
+          <p>發布院內公告與即時訊息。</p>
+          <a href="./announcements.html">前往公告管理</a>
+        </article>
+      </section>
+    </main>
+
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

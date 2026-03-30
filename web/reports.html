@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>統計報表 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>統計報表</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html" class="active">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./billing-system.html">批價櫃台首頁</a>
+      <a href="./billing.html">批價收費</a>
+      <a href="./reports.html" class="active">統計報表</a>
+      <a href="./lookup.html">掛號查詢</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <article class="card">
+        <h2>統計報表</h2>
+        <div class="stats" id="report-cards"></div>
+        <div class="grid two">
+          <div class="table-wrap"><table id="report-dept-table"></table></div>
+          <div class="table-wrap"><table id="report-doctor-table"></table></div>
+        </div>
+      </article>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

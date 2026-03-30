@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>排班管理 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>醫師排班管理</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html" class="active">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./doctor-system.html">醫生系統首頁</a>
+      <a href="./departments.html">科別管理</a>
+      <a href="./schedule.html" class="active">排班管理</a>
+      <a href="./rules.html">規則與給號</a>
+      <a href="./orders.html">門急診醫囑</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <article class="card">
+        <h2>醫師排班管理</h2>
+        <div class="field-row">
+          <select id="sch-doctor"></select>
+          <select id="sch-timeslot"></select>
+          <button id="btn-add-schedule">新增排班</button>
+        </div>
+        <div class="table-wrap"><table id="schedule-table"></table></div>
+      </article>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

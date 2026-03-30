@@ -1,0 +1,163 @@
+
+
+
+門診掛號系統
+資料庫結構
+檔案結構	
+基本主檔
+科別主檔(DIVISIONTBL)	
+醫師主檔(DOCTORTBL)	
+縣市主檔(COUNTYTBL)	
+鄉鎮主檔(TOWNTBL)	
+
+
+掛號排班檔(OPDREGROOMTBL)	
+規則排班檔(OPDREGULARROOMTBL)	
+掛號看診檔(OPDREGDIAGNOSISTBL)	
+醫師檔(GENDOCTORTBL)	
+給號方式對照檔(OPDGIVENUMBERTBL)	
+流水號無名氏檔(OPDFLOWANONYMTBL)	
+院內科別檔(GENSECTIONTBL)	
+申報科別檔(GENDECSECTIONTBL)	
+時段檔(GENTIMEDIVISIONTBL)	
+診別檔(OPDROOMTYPETBL)	
+特殊診檔(OPDSPECIALROOMTBL)	
+轉診醫院對照檔(GENHOSPITALTBL)	
+交易檔
+掛號費檔(OPDREGFEETBL)	
+診斷書檔(OPDDIAGNOSISBOOKTBL)	
+診斷書管理檔(OPDBOOKMANAGETBL)	
+統計檔	
+掛號人數統計檔(OpdRegPeopleTbl)	
+醫師服務統計檔(OpdStcDoctorTbl)	
+掛號方式統計檔(OpdStcRegWayTbl)	
+掛號員服務統計檔(OpdStcRegServiceTbl)	
+
+鍵值符號說明﹕
+P﹕主鍵(Primary key)
+S﹕索引鍵(Index Key)
+
+檔案結構
+掛號排班檔(OpdRegRoomTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文掛號排班檔英文OpdRegRoomTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchDate日期char70861225PchPNC時段char15１﹕早，２﹕午，３﹕晚
+relate to時段檔PchRoom診間代號char40107chWeekDay星期char12０﹕星期日，１﹕星期一，２﹕星期二
+３﹕星期三，４﹕星期四，５﹕星期五
+６﹕星期六chSecNo科別代號char222relate to科別檔chDocNo醫師代號char50105relate to醫師檔chIfStop是否停診char111﹕是，0﹕否, default : '0'chIfSubst是否代診char111﹕是，0﹕否, default : '0'chSubDocNo代診醫師代號char50106chSubRoom代診診間char40102若代診醫師有別間診間，記錄代診診間chRoomName診室名char12內02free text, user maintenence
+for病歷調單and所有其他掛號資訊
+user must input thischRoomType診別char1ＥＲ﹕一般診，Ｎ﹕夜診，H﹕假診，Ｓ﹕特別診，Ｅ﹕急診
+relate to診別檔chSpecialRoom特殊診char12１﹕兒童，２﹕青少年，Ｘ﹕檢查診，A﹕成人預防保健
+relate to 特殊診檔chTakeMR調病歷char11１﹕是，０﹕否; default : '1'chIfVoice可否語掛char11１﹕是，０﹕否; default : '1'chVocTimeLimit語掛時限char511:30語音掛號當診截止時間chAvgInterval平均看診時間char500:02ＨＨＭＭintPreLimit預約限額int12預約人數限制，９９９表不限intTotalLimit限掛人數int99掛號總人數限制，９９９表不限chNoMethod給號方式char11對照給號方式維護表;default : '1'
+relate to給號方式檔intBeginNo起始號int1掛號開始號; default: 1chRearNo開始給後段號char101﹕True，0﹕False; default : '0'
+It's a flag for giving rearward number.intCurNextNo現場目前號int12a counter for giving number
+（已給出的那一號）intPreNextNo語音(預約)目前號int22a counter for giving number
+（已給出的那一號）chNoList掛號給號序列char999999Byte的List，1表已給出，0表未給出的空號chWaring警告訊息char20人工掛號時, 出waringchStopDate停代診通知日char7chStopInvk停代診通知人char10chStopResn停代診原因char14chStopEmp停代診輸入員char10規則排班檔(OpdRegularRoomTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文規則排班檔英文OpdRegularRoomTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchWeekDay星期char12０﹕星期日，１﹕星期一，２﹕星期二
+３﹕星期三，４﹕星期四，５﹕星期五
+６﹕星期六PchPNC時段char15１﹕早，２﹕午，３﹕晚，
+４﹕急早，５﹕急午，６﹕急晚
+relate to時段檔PchRoom診間代號char40107chSecNo科別代號char222relate to科別檔chDocNo醫師代號char50105relate to醫師檔chRoomName診室名char12內02free text, user maintenence
+for病歷調單and所有其他掛號資訊
+user must input thischRoomType診別char1ＥＲ﹕一般診，Ｎ﹕夜假診，Ｓ﹕特別診，Ｅ﹕急診
+relate to診別檔chSpecialRoom特殊診char12１﹕兒童，２﹕青少年，Ｘ﹕檢查診，A﹕成人預防保健
+relate to 特殊診檔chTakeMR調病歷char11１﹕是，０﹕否; default : '1'chIfVoice語掛char11１﹕是，０﹕否; default : '1'chVocTimeLimit語掛時限char511:30語音掛號當診截止時間chAvgInterval平均看診時間char500:02ＨＨＭＭintPreLimit預約限額int12預約人數限制，９９９表不限;default 999intTotalLimit限掛人數int99掛號總人數限制，９９９表不限;default 999chNoMethod給號方式char11對照給號方式維護表;default : '1'
+relate to給號方式檔intBeginNo起始號int1掛號開始號; default : 1chWaring警告訊息char20人工掛號時, 出waring
+掛號看診檔(OpdRegDiagnosisTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文掛號看診檔英文OpdRegDiagnosisTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchDate日期char70861225PchPNC時段char11１﹕早，２﹕午，３﹕晚，
+relate to時段檔PchRoom診間代號char4０１０７PintRegNo序號int５就醫序號，由給號系統給定chDocNo醫師代號char5０１０５relate to醫師檔，redundant (由排班表抄回)chRegFM初複診掛號char110﹕初診未報到
+1﹕初診已報到
+2﹕複診chRegMethod掛號方式char20101﹕當診現場初診，11﹕預約現場初診
+02﹕當診現場複診，12﹕預約現場複診
+03﹕當診電話初診，13﹕預約電話初診
+04﹕當診電話複診，14﹕預約電話複診
+05﹕當診語音初診，15﹕預約語音初診
+06﹕當診語音複診，16﹕預約語音複診
+33﹕大量傷患掛號，77：電腦代掛SchMRNo病歷號char10Ｋ２１２２４５６９８tiDupReg重複掛號tinyint１若同時段已掛過號，則重複就診號加１，作為多科掛號之辨識，起始號為０chHospNo轉診醫院代號char10relate to轉診醫院檔chDigStat看診狀態char11for SOAPchERClose急診結帳否char1１１﹕是，０﹕否;default : '0'chIfDigBook開診斷書char11１﹕是，０﹕否;default : '0'chIfXRay調借Ｘ光片char11１﹕是，０﹕否;default : '0'chLoadType部份負擔代碼char5Ｃ１０批價系統使用chInsuSeqNo健保卡序號char3Ａ１批價系統使用chInsuType掛號繳費身份別char3１１relate to身分別檔
+write back to MRBasicchDCTType掛號繳費折扣別char3１１２relate to 折扣別檔
+write back to MRBasicchRegEmpNo掛號人員代碼char7BF2122chRegDate掛號日期char70861224chRegTime掛號時間char521:00chMROutTime病歷出庫時間char523:00病歷刷出庫到此診間的時間chIfMRPPrint病歷調閱單列印否char111﹕Yes, 0﹕No; default '0'intMRPNo病歷調單流水號int199chIfPreMRP預約列印病調單char111﹕Yes, 0 ﹕No; default : 0chIfWithdraw刪除否char1１取消掛號（退掛），１﹕是，０﹕否; default : 0chWithdrawEmpNo取消掛號人代碼char7BF2211Free TextchWithdrawDate取消掛號日期char70861225
+(for obl)
+隔日批價時，為沖銷的基準chWithdrawTime取消掛號時間char515:30(for obl)chQuoteFlg批價狀況char11(for obl); default : 'N'
+N=尚未看診
+S=SOAP看診出診間
+Y=SOAP批價確定
+U=SOAP修改醫令
+Q=非SOAP已批價過rlAutoDebt日結自動轉欠款金額realfor obl; default : 0intSelfDrugD最大給藥日（自費）int2for obl; ; default : 0intClaimDrugD最大給藥日（健保）int2for obl; default : 0intReceiptNo掛號費收據號碼intfor interaction with obl; default : 0intBillSubNo已批價次數int2for obl; default : 0chDiagTime看診時間char521:00chIfRegSTC轉掛否char11與退掛欄位配合使用
+退掛病人: 1, 0
+轉掛病人: 1, 1
+不計掛號服務量: 1, 2chIfTakeMR是否調病歷char110:no, 1:yes (default)
+(新增欄位-97'.9.23. Tim Ho)說明﹕
+若重複就診號 > 0﹐表多科掛（同一日）
+	執行'診間掛號資料查詢'時
+搜尋已顯示出之病患掛號資料，並將筆此掛號資料加入'多科掛號'欄位中
+醫師檔(GenDoctorTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文醫師檔英文GenDoctorTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchDocNo醫師代號char50105五碼數字，若為四碼表最後一碼為0，與舊碼相容chSecNo科別代號char222relate to科別檔chDocName醫師姓名char10某某某chIDNo醫師身分證號char10U212245789chDecDate可申報日期char70851225可開始進行保險申報的日期chDecDocNo申報醫師代號char50105若此醫師不能申報，代替申報的醫師代號chDecBDate代申報起日char70861225此申報醫師的申報開始日（批價申報系統會用到）chDecEDate代申報迄日char70861225此申報醫師的申報結束日（批價申報系統會用到）chDocType醫師別char111﹕主治醫師，2﹕住院醫師，3﹕實習醫師tiDocInOut院內外tinyint00﹕院內，1﹕院外rlDiscount優免折扣額度real10000for obl; default : 0chQuitDate離職日char70860101若此醫師已離職的離職日。若尚在職，則為空白給號方式對照檔(OpdGiveNumberTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文給號方式對照檔英文OpdGiveNumberTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchNoMethod給號方式編號char11PintNo序號名稱int1chFirstReg初診char111﹕可，0﹕不可;default : '1'chMultiReg複診char101﹕可，0﹕不可;default : '1'chPreReg預約char111﹕可，0﹕不可;default : '1'chCurReg當診char101﹕可，0﹕不可;default : '1'chRes保留char101﹕可，0﹕不可;default : '1'流水號無名氏檔(OpdFlowAnonymTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文流水號無名氏檔英文OpdFlowAnonymTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明intFloatNo下一可用流水號int12345678按"流水號"給出流水號後在此加一，表下一流水號intAnonymNo下一無名氏編號int999至999後，下一號改為1，每按出"流水號"便給出一無名氏編號intMRPNo下一病歷調單流水號int9999列印病歷調單時使用intWarNo大量傷患掛號序號int1000大量傷患掛號給號時的下一給出序號，若大量傷患掛號重置成功，則將此號重置為1
+給出的大量傷患臨時病歷號為ＫＫ1~ＫＫnintPDARegNoPDA 檢傷序號int1000護理人員於PC上執行檢傷分類的序號院內科別檔(GenSectionTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文院內科別檔英文GenSectionTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchSecNo科別代號char2０１chSecName科別名稱char20一般chOpdDecNo門診申報代號char201for Opd Declaration, relate to GenDecSectionTblchIpdDecNo住院申報代號char201for Ipd Declaration, relate to GenDecSectionTblchKind大分類char11for IPD systemchLocation院內位置char30該科別在院中的位置，文字敘述chCatSecNo隸屬科別代號char201此科為哪一科的次專科，如心臟內科為內科中的一次專科chCostID成本中心代碼char6chKind1申報科別檔(GenDecSectionTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文申報科別檔英文GenDecSectionTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchSecNo申報科別代號char2０１chIpdOpd門診／住院char111:門診;0:住院chSecName申報科別名稱char16一般時段檔(GenTimeDivisionTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文時段檔英文GenTimeDivisionTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchPNC時段代號char1１１﹕早，２﹕午，３﹕晚chName時段名稱char6早１﹕早，２﹕午，３﹕晚chStartTime起始時間char509:00早﹕0000，急早﹕0700
+午﹕1200，急午﹕1500
+晚﹕1730，急晚﹕2300chEndTime結束時間char517:00早﹕1200，急早﹕1500
+午﹕1730，急午﹕2300
+晚﹕0000，急晚﹕0700
+診別檔(OpdRoomTypeTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文診別檔英文OpdRoomTypeTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchRoomType診別代號char1ＥＲ﹕一般診，Ｎ﹕夜診，Ｈ﹕假診，﹕Ｓ﹕特別診，Ｅ﹕急診chName診別名稱char10急診chIfVoiceReg可否語音掛號char1１１﹕可，０﹕不可; default : '1'
+特殊診檔(OpdSpecialRoomTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文特殊診檔英文OpdSpecialRoomTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchSRNO特殊診代號char1１１﹕兒童，２﹕青少年，Ｘ﹕檢查診，Ａ﹕成人預防保健，L：連續處方箋診，Ｆ：強迫批價診，0:一般（無特殊診，選項為空白）chName特殊診名稱char16兒童chIfVoiceReg可否語音掛號char1１１﹕可，０﹕不可;default : '1'chIfPreReg是否先預約才看診char1１１﹕是，０﹕否; default : '0'chIfAgeReg是否限制看診年齡char1１１﹕是，０﹕否; default : '0'tiAgeStart看診年齡自tinyint１０參考"特殊診"說明; default 0tiAgeEnd看診年齡止tinyint１５default 200說明：特殊診檔中的"可否語音掛號"壓過診別檔中的"可否語音掛號"，可能選擇了"診別"，但"特殊診"未設定，或是兩個都設定，如診別選一般診，特殊診選兒童，由兒童診的可否語掛來決定是否可以語音掛號
+轉診醫院對照檔(GenHospitalTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文轉診醫院對照檔英文GenHospitalTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明ＰchHospNo醫院代號char10１００００參考原有之醫院檔chLevel等級char111﹕醫學中心，2﹕區域醫院，3﹕地區醫院，4﹕診所chName醫院名稱char20某某醫院chIfTeach是否教學醫院char111:yes, 0:no; default : '0'chTel電話char2003571212掛號費檔(OpdRegFeeTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文掛號費檔英文OpdRegFeeTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchRoomType診別char1Ｒ參考"診別"說明PchFM初複診char111﹕初診，0﹕複診PchPNC時段char12１﹕早，２﹕午，３﹕晚，PchInsu保險char110﹕自費，1﹕健保chPriceNo批價代號char7relate to批價檔診斷書檔(OpdDiagnosisBookTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文診斷書檔英文OpdDiagnosisBookTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchDigBookNo診斷書編號char1A由user維護chName診斷書名稱char20死亡診斷書由user維護intNextNo下一給號int00001user給定起始號;default : 1chNote此種診斷書的說明char10Note由user維護診斷書管理檔(OpdBookManageTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文診斷書管理檔英文OpdBookManageTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchMRNo病歷號char10k121145869病歷號PchDigBookNo診斷書編號char10A08600001A:診斷書種類編號;086:年度;00001：流水號pchDate開立日期char70861225chSecNo科別代號char222relate to科別檔chNote此診斷書的說明char20NoteFREE TEXT統計檔
+掛號人數統計檔(OpdRegPeopleTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文掛號人數統計檔英文OpdRegPeopleTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchDate日期char70861225PchPNC時段char11relate to時段檔PchSecNo科別代號char222relate to科別檔chIfEmg急診否char111﹕Yes, 0 or blank ﹕NochSDay周間假日char111﹕週間，6﹕週六，9﹕假日intRoomNumb診數int99此科別該時段開診診間總數intFOpdNum初診人數int1000intMOpdNum複診人數int1000intOpdNum門診人數int9999intEmgNum急診人數int9999intNgtNum夜診人數int9999intHldNum假診人數int9999intInsNum健保人數int9999"健保"指掛號身分為"健保"intNrmNum一般人數int9999"一般"指掛號身分為"一般"intWithdraw退掛人數int9999intComReg電腦代掛int9999intSRoomNum特別診診數int9999intAbsent未就診人數int9999intTransReg轉掛人數int9999890530 志成新增醫師服務統計檔(OpdStcDoctorTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文醫師服務統計檔英文OpdStcDoctorTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchDate日期char70861225PchPNC時段char11relate to時段檔PchDocNo醫師代號char50105relate to醫師檔intPatNum看診數int99此醫師該時段看診總數intWithdraw退掛人數intintComReg電腦代掛intintAbsent未就診人數int掛號方式統計檔(OpdStcRegWayTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文掛號方式統計檔英文OpdStcRegWayTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchRWDate日期char70861225PchPNC時段char11relate to時段檔intLocFNum現場初診人數int1000intLocMNum現場複診人數int1000intVocFNum語音初診人數int9999intVocMNum語音複診人數int9999intTelFNum電話初診人數int9999intTelMNum電話複診人數int9999intAutoNum電腦代掛人數int9999電腦自動掛號，如檢驗排程預約掛號intCanNum退掛人數int9999intPreNum預約人數int9999掛號員服務統計檔(OpdStcRegServiceTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文掛號員服務統計檔英文OpdStcRegServiceTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明PchDate日期char70861225PchPNC時段char11relate to時段檔PchEmpNo掛號員代號char6relate to員工檔intSrvNum服務人數int9999此時段掛號員服務總人數
+轉診掛號之醫師留言檔(OpdTransRegTbl)
+系統名稱慈濟醫院門診掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文轉診掛號之醫師留言檔英文OpdTransRegTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明IchDate掛號日期char70861225PchDSeeDate看診日期char70861225PchPNC時段char11１﹕早，２﹕午，３﹕晚，
+relate to時段檔PchRoom診間代號char4０１０７PintRegNo序號int4５就醫序號，由給號系統給定chDocNo看診醫師代號char5０１０５relate to醫師檔，redundant (由排班表抄回)chMRNo病歷號char10chRegDocTel轉診醫師連絡電話char22chRegDocName轉診醫師姓名char20chRegDoceMail轉診醫師eMailchar50chRegDocCont轉診醫留言char16chPtTel病患電話char22chPtName病患姓名char20chHospName轉診院所名稱varchar50
+語音掛號之病歷查詢檔(OpdVoiceQryChartTbl)
+系統名稱慈濟醫院門診語音掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文 1英文OpdVoiceQryChartTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明chIDNum身分證號數字char9123456789chStatus狀態char1" ", R , W新增:空白. 已讀取: R. 已回覆: W.chCount回傳總筆數char2chMRNo1病歷號1char10chName1姓名1Char10chMRNo2病歷號2char10chName2姓名2Char10chMRNo3病歷號3char10chName3姓名3Char10chMRNo4病歷號4char10chName4姓名4Char10chMRNo5病歷號5char10chName5姓名5Char10chMRNo6病歷號6char10chName6姓名6Char10chMRNo7病歷號7char10chName7姓名7Char10chMRNo8病歷號8char10chName8姓名8Char10chMRNo9病歷號9char10chName9姓名9Char10chMRNo10病歷號10char10chName10姓名10Char10
+語音掛號之掛號檔(OpdVoiceRegTbl)
+系統名稱慈濟醫院門診語音掛號系統製作日期資料庫門診資料庫（DB_OPD）版本表格中文 2英文OpdVoiceRegTbl
+欄位名稱（英文）欄位名稱（中文）型態（屬性）長度例子說明chSeeDate日期char70921015chPNC時段char1上午: 1. 下午: 2.  晚上: 3.chRoom診間char4chMRNo病歷號char10chFirstReg初複診掛號Char1初診: 1.  複診: 2.chStatus狀態char1" ", R , W新增:空白. 已讀取: R. 已回覆: W.chRetStatus狀態char1" ", R , W新增:空白. 已讀取: R. 已回覆: W.chName2姓名2Char10chMRNo3病歷號3char10chName3姓名3Char10chMRNo4病歷號4char10chName4姓名4Char10chMRNo5病歷號5char10chName5姓名5Char10chMRNo6病歷號6char10chName6姓名6Char10chMRNo7病歷號7char10chName7姓名7Char10chMRNo8病歷號8char10chName8姓名8Char10chMRNo9病歷號9char10chName9姓名9Char10chMRNo10病歷號10char10chName10姓名10Char10
+0970501志成Record
+早上美惠為此事特別找我去討論
+
+因評鑑所需故很急
+
+DB_OPD..OpdRegDiagnosisAddTbl 	掛號附加檔
+
+1.chSeeDate			看診日	char(7)		PK
+2.chPNC				時段		char(1)		PK
+3.chRoom				診間		char(4)		PK
+4.intRegNo			序號		int			PK
+5.chStarRegTime		開始掛號時間	char(5)	
+6.chRegPositionTbl 		掛號時的電腦位置	char(同目前系統中的長度)
+
+幸福門診掛號系統                                        資料結構
+
+掛號系統檔案結構.doc  115.3.10.製作 Page : 2 of 22	           列印日期：3/30/2026
+

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>規則排班與給號 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>規則排班 / 給號設定</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html" class="active">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./doctor-system.html">醫生系統首頁</a>
+      <a href="./departments.html">科別管理</a>
+      <a href="./schedule.html">排班管理</a>
+      <a href="./rules.html" class="active">規則與給號</a>
+      <a href="./orders.html">門急診醫囑</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <div class="grid two">
+        <article class="card">
+          <h2>規則排班</h2>
+          <div class="field-grid">
+            <label>星期
+              <select id="rule-weekday">
+                <option value="1">星期一</option><option value="2">星期二</option><option value="3">星期三</option>
+                <option value="4">星期四</option><option value="5">星期五</option><option value="6">星期六</option><option value="0">星期日</option>
+              </select>
+            </label>
+            <label>醫師<select id="rule-doctor"></select></label>
+            <label>時段<select id="rule-timeslot"></select></label>
+            <label>限掛人數<input id="rule-limit" type="number" min="1" value="99" /></label>
+          </div>
+          <button id="btn-add-rule">新增規則</button>
+          <div class="table-wrap"><table id="rule-table"></table></div>
+        </article>
+        <article class="card">
+          <h2>給號設定</h2>
+          <div class="field-grid">
+            <label>起始號<input id="cfg-begin-number" type="number" min="1" /></label>
+            <label>預約限額<input id="cfg-pre-limit" type="number" min="1" /></label>
+            <label>總限額<input id="cfg-total-limit" type="number" min="1" /></label>
+            <label>給號方式
+              <select id="cfg-number-method">
+                <option value="1">1: 順序給號</option><option value="2">2: 奇偶分流</option><option value="3">3: 保留號混排</option>
+              </select>
+            </label>
+          </div>
+          <button id="btn-save-config">儲存設定</button>
+          <pre id="cfg-preview" class="mono"></pre>
+        </article>
+      </div>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

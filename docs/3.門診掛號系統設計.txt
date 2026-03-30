@@ -1,0 +1,937 @@
+幸福醫療資訊系統
+
+
+
+
+門診掛號作業系統
+
+
+
+
+系統設計規格書
+
+系統設計(Program Spec.)
+1. 掛號作業(OK)	
+1.1 現場掛號作業(OK)	
+1.1.1 初診現場掛號作業（當診、預約）	
+1.1.2 複診現場掛號作業（當診、預約）	
+1.2 電話掛號（人工接聽）作業(OK)	
+1.2.1 初診電話掛號作業（當診、預約）	
+1.2.2 複診電話掛號作業（當診、預約）	
+1.3 大量傷患掛號作業(OK)	
+1.4 提供給其他系統用的預約掛號系統(OK)	
+1.5 掛號FUNCTIONS(OK)	
+1.5.1 Function啟動給號切點	
+1.5.2 Function掛號給號	
+1.5.3 Function檢查掛號限制	
+1.5.4 Function掛號方式計算	
+1.5.5 Function掛號收費	
+1.5.6 Function列印掛號單	
+1.5.7 Function急診記錄	
+2. 語音作業(OK)	
+2.1 語音掛號	
+2.2 語音查詢掛號	
+2.3 語音取消掛號	
+2.4 語音本院公告、使用說明	
+3. 其他掛號作業(OK)	
+3.1 退掛作業（現場、電話人工接聽）(OK)	
+3.2 轉掛作業(OK)	
+3.3 預約掛號報到作業(OK)	
+3.4 診斷書編號作業(OK)	
+4. 查詢列印作業(OK)	
+4.1 病患掛號資料查詢列印作業(OK)	
+4.2 病歷基本資料更改列印作業(OK)	
+4.3 診間掛號資料查詢列印作業(OK)	
+5. 檔案維護作業(OK)	
+5.1 掛號排班維護作業	
+5.2 停診、代診作業	
+5.3 醫師檔維護作業	
+5.4 轉診/轉檢醫院維護作業	
+5.5 假日維護檔作業	
+5.6 病歷歸還登錄單	
+6. 日結轉檔、統計(OK)	
+6.1 日結統計	
+6.2 日結爽約及看診維護	
+6.3 日結排班複製	
+7. 統計列印作業(OK)	
+7.1 門診服務量統計	
+7.2 醫療服務量月統計表（一）	
+7.3 醫療服務量月統計表（二）	
+7.4 各醫師門診人數統計月報表	
+7.5 各科人數月統計表	
+7.6 掛號方式統計	
+7.7 掛號員各人每月工作統計表查詢或列印	
+
+
+（掛號作業畫面）
+1. 掛號作業(ok)
+1.1 現場掛號作業(ok)
+說明：初複診掛號有一些些不同，故program spec. 分成兩組來寫，但程式寫作時寫成一個現場掛號作業的程式即可
+作業畫面參考"門診掛號作業"
+1. 判斷初複診
+1.1. Input 病歷號（cursor jumpt to日期）
+1.1.1. 若按"給流水號"則給一流水號from"流水號無名氏檔"，使用流水號的時候，姓名欄帶出"無名氏-XXX"其中ＸＸＸ為無名氏編號（從"流水號無名氏檔"中得來）
+1.1.2. "流水號無名氏檔"中的流水號及無名氏編號均加一，超過位數後(999)循環之(from 1)。
+1.2. Check病歷主檔with病歷號
+1.2.1. if exist ->"初複診"欄位Display"複診"-> 繼續進行複診現場掛號
+1.2.2. else ->"初複診"欄位Display"初診"-> 繼續進行初診現場掛號
+2. "日期"帶出當日系統日期，"時段"參照"時段檔"及系統時間帶出當診時段，user可更改
+2.1. if日期、時段=當診時段-> 掛號方式=當診現場初（複）診
+2.2. else -> 預約現場初（複）診掛號
+1.1.1 初診現場掛號作業（當診、預約）
+1. Check是否已初診預約
+1.1. Check 掛號看診檔with
+1.1.1. "病歷號"、今日後所有"日期"、所有"時段"
+1.1.2. "病歷號數字部分"、今日後所有"日期"、所有"時段"
+* if exist -> Display掛號資料in Pop-up window which has "取消掛號"、"繼續掛號"（此畫面用Model dialog含一Grid顯示已經掛號資訊），其中掛號資料為"診間代號"、"序號"(from掛號看診檔)
+1.1.2.1. "取消掛號"-> 回現場掛號畫面，清除掛號螢幕
+1.1.2.2. "繼續掛號"->回現場掛號畫面，繼續掛號
+NOTE:若該病患已經初診預約(人工判斷)，操作員應改換"預約掛號報到"進行初診患者的預約報到作業
+2. Input掛號資料
+2.1. Input診間代號（4位數字，after user input, cursor jump to序號）-> Search"掛號排班檔"帶出"診室名"、"科別名"、"醫師代號"、"醫師姓名"、診間資訊、此診間已給之序號（於Grid處以"＊"標示已給出的序號，否則空白。空白號數顯示至255）
+2.1.1. 停診處理：check掛號排班檔中的"是否停診"，if yes-->
+2.1.1.1. Pop up window with message"此診間已停診，無法掛入！""確定"
+2.1.1.2. "確定"後，關閉Dialog Window，原輸入的診間資料清除，其餘資料不清除
+2.1.2. 代診處理
+2.1.2.1. Pop up window with message"此診間由ＸＸＸ醫師代診！""確定"，其中ＸＸＸ為"代診醫師姓名"，按"確定"後-->
+2.1.2.2. 若"掛號排班檔"中"代診診間"有值（表合併至他診間看診），將原診間代號改為代診診間代號，並依照代診診間的醫師代號、姓名、已掛號情形重作掛號動作
+2.1.2.3. 若"掛號排班檔"中"代診診間"無值（表僅替換醫師看診，診間不變），將"醫師代號"、"姓名"改為代診醫師代號、姓名即可，繼續掛號作業
+2.2. if"診別"=急診 -->
+2.2.1. "列印急診標籤"Flag on
+2.2.2. call Function急診記錄
+3. Call Function檢查掛號限制
+4. 給號（序號）
+4.1. Call Function掛號給號，帶出Default序號
+4.2. if為"當診掛號" and user input number or select number from grid
+4.2.1. Call"Function啟動給號切點"
+4.3. record the number in"掛號排班檔"，mark該號已給出("掛號給號序列"中的相對應Byte mark 1)
+4.4. 序號給出後，cursor jump to 健保卡序號
+5. Input健保卡序號、轉入醫院（ComboBox From"轉診醫院對照檔"）（cursor jump to身分）
+6. Input身分（ComboBox from"身分檔"，或直接input數字）、折扣（（ComboBox from"折扣檔"，或直接input數字））cursor jumpt to身分證號
+7. Input病患基本資料
+7.1. if"病歷號"為10個文數字，將"病歷號"Copy至"身分證號"，otherwise"身分證號"空白
+7.2. Input"性別"(1/0)(此欄限制使用者僅可輸入1 or 0)、"姓名"、"法名"
+7.3. Input生日
+7.3.1. 民國前以"-999999"格式，民國後以"9999999"格式input
+7.3.2. 以"系統年" - "生日年"，帶出歲數
+7.4. Input出生地(free text)、籍貫(free text)、語言(combo box from語言檔)、種族(combo box from種族檔)、住址(free text)、電話Ｈ(free text for number)、電話Ｏ(free text for number)
+NOTE:電話input格式為free text，但要求user輸入區域號，且分機以"-"作分隔
+8. 收費
+8.1. disable所有繳費資訊欄位
+8.2. if user click "收費"，enable所有繳費資訊欄位，Call"掛號收費Function"
+9. 掛號資料登錄、取消user click"確定"-->
+9.1. 寫入"掛號看診檔"
+9.1.1. 日期、時段、診間代號、序號、醫師代號、病歷號、部份負擔代碼、健保卡序號、身分別、折扣別、掛號人員代碼：對應畫面欄位
+9.1.2. 初複診掛號：初診已報到
+9.1.3. 掛號方式：當診/預約(由是否當診判斷)現場初診
+9.1.4. 重複掛號=當日該病歷掛號總數-1
+9.1.5. 開診斷書：對應畫面開診斷書欄位
+9.1.6. 調借Ｘ光：對應畫面調借Ｘ光欄位
+9.1.7. 掛號日期時間：系統日期時間
+9.1.8. create a record in"掛號看診檔"
+9.1.9. Search all records in "掛號看診檔",if there is any "初診預約掛號"records with the same病歷號數字部分或病歷號, modify初複診欄位from"初診"to"複診"modify該病歷號from身分證數字部份to病歷號(True病歷號)
+9.2. 建立基本資料-->create record in病歷基本資料檔
+9.3. Call列印掛號單Function
+9.4. if列印急診標籤flag is on-> Call列印急診姓名標籤
+* user click "取消"
+9.4.1. pop-up window confirm取消with "確定取消此筆掛號""是""否"
+9.4.2. after confirm, clear all fields
+9.4.3. 刪除對應的掛號排班表中已給出的序號(將掛號序列中的對應序號設為0)
+10. 清除畫面-->clear all fields
+1.1.2 複診現場掛號作業（當診、預約）
+1. Display病歷基本資料
+1.1. From"病歷基本資料檔"帶出所有病歷基本資料，包括"身分"、"折扣"
+1.2. Disable所有病歷基本資料欄位，except "身分"、"折扣"
+2. if列管病人（Check病歷基本資料檔，field"列管病人"not null）
+2.1. Pop-up window display alert message"列管病人"with "OK" button(列管病人警告畫面)
+3. check是否已複診預約
+3.1. Check 掛號看診檔with
+3.1.1. "病歷號"、"日期"、"時段"
+3.1.2. "病歷號數字部分"、"日期"、"時段"
+* if exist -> Display掛號資料in Pop-up window which has "取消初診掛號"、"繼續初診掛號"（此畫面用Model dialog含一Grid顯示已經掛號資訊），其中掛號資料為"診間代號"、"序號"
+3.1.2.1. "取消掛號"-> 回現場掛號畫面，清除掛號螢幕
+3.1.2.2. "繼續掛號"->回現場掛號畫面，繼續掛號
+4. Input掛號資料
+4.1. Input診間代號（cursor jump to序號）-> Search"掛號排班檔"帶出"診室名"、"科別名"、"醫師代號"、"醫師姓名"、"診間資訊"、此診間已給之序號（於Grid處以"＊"標示已給出的序號，否則空白。空白號數顯示至255）
+4.1.1. 停診處理：check掛號排班檔中的"是否停診"，if yes-->
+4.1.1.1. Pop up window with message"此診間已停診，無法掛入！""確定"
+4.1.1.2. "確定"後，關閉Dialog Window，原輸入的診間資料清除，其餘資料不清除
+4.1.2. 代診處理
+4.1.2.1. Pop up window with message"此診間由ＸＸＸ醫師代診！""確定"，其中ＸＸＸ為"代診醫師姓名"，按"確定"後-->
+4.1.2.2. 若"掛號排班檔"中"代診診間"有值（表合併至他診間看診），將原診間代號改為代診診間代號，並依照代診診間的醫師代號、姓名、已掛號情形作掛號動作
+4.1.2.3. 若"掛號排班檔"中"代診診間"無值（表僅替換醫師看診，診間不變），將"醫師代號"、"姓名"改為代診醫師代號、姓名即可，繼續掛號作業
+4.2. if"診別"=急診 -->
+4.2.1. "列印急診標籤"Flag on
+4.2.2. call Function急診記錄
+5. Call Function檢查掛號限制
+6. 給號（序號）
+6.1. Call Function掛號給號，帶出Default序號
+6.2. if"當診掛號" and user input number or select number from grid
+6.2.1. Call"Function啟動給號切點"
+6.3. record the number in"掛號排班檔"，mark該號已給出
+6.4. 序號給出後，cursor jump to 健保卡序號
+7. Input健保卡序號、轉入醫院（From"轉診醫院對照檔"）（cursor jump to身分）
+8. Input身分（ComboBox from"身分檔"，或直接input數字）、折扣（ComboBox from"折扣檔"，或直接input數字）cursor jumpt to身分證號
+9. 收費
+9.1. disable所有繳費資訊欄位
+9.2. if user click "收費"，enable繳費資訊欄位，Call"掛號收費Function"
+10. 掛號資料登錄、取消-->寫入"掛號看診檔"
+10.1. user click"確定"
+10.1.1. 日期、時段、診間代號、序號、醫師代號、病歷號、部份負擔代碼、健保卡序號、身分別、折扣別、掛號人員代碼：對應畫面欄位
+10.1.2. 初複診掛號：複診
+10.1.3. 掛號方式：當診/預約(由是否當診判斷)現場初診
+10.1.4. 重複掛號=當日該病歷掛號總數-1
+10.1.5. 開診斷書：對應畫面開診斷書欄位
+10.1.6. 調借Ｘ光：對應畫面調借Ｘ光欄位
+10.1.7. 掛號日期時間：系統日期時間
+10.1.8. create a record in"掛號看診檔"
+10.1.9. Call列印掛號單Function
+10.1.10. if列印急診標籤flag is on-> Call列印急診姓名標籤
+10.2. user click "取消"
+10.2.1. pop-up window confirm取消with "確定取消此筆掛號""是""否"
+10.2.2. after confirm, clear all fields
+10.2.3. 刪除對應的掛號排班表中已給出的序號(將掛號序列中的對應序號設為0)
+11. if user click "病歷資料修改"（在掛號"確定"前）
+11.1. Enable all 基本資料欄位（user可自由input or修改）
+11.2. user click掛號"確定"後
+11.2.1. if 修改"身分證號"、"姓名"、"生日"任一欄位
+11.2.1.1. 身分證號-> modify"病歷基本資料檔"的"身分證號"
+11.2.1.2. 姓名-> modify"病歷基本資料檔"的"新姓名"
+11.2.1.3. 生日-> modify"病歷基本資料檔"的"新生日"
+11.2.1.4. insert record in"門診病歷基本資料修改檔"，其中"修改人ＩＤ"為掛號人員ＩＤ，修改人姓名空白
+11.2.2. 修改其他欄位-->直接修改"病歷基本資料檔"的對映欄位
+12. 清除畫面-->clear all fields
+1.2 電話掛號（人工接聽）作業(ok)
+說明：初複診掛號有一些些不同，故program spec. 分成兩組來寫，但程式寫作時寫成一個現場掛號作業的程式即可
+作業畫面參考"門診掛號作業"
+1. 判斷初複診
+1.1. Input 病歷號（cursor jumpt to日期）
+1.1.1. 若按"流水號"則給一流水號from"流水號無名氏檔"，使用流水號的時候，姓名欄帶出"無名氏-XXX"其中ＸＸＸ為無名氏編號（從"流水號無名氏檔"中得來）
+1.1.2. "流水號無名氏檔"中的流水號及無名氏編號均加一，超過位數後循環之。
+1.2. Check病歷主檔with病歷號
+1.2.1. if exist ->"初複診"欄位Display"複診"-> 繼續進行複診電話掛號
+1.2.2. else ->"初複診"欄位Display"初診"-> 繼續進行初診電話掛號
+2. "日期"帶出當日系統日期，"時段"參考"時段檔"及系統時間帶出當診時段，user可更改
+2.1. if日期、時段=當診時段-> 當診電話初（複）診
+2.2. else -> 預約電話初（複）診
+1.2.1 初診電話掛號作業（當診、預約）
+1. Disable"病歷基本資料"所有欄位
+2. cursor jump to診間
+3. 是否已初診預約，Check "掛號看診檔"with
+3.1. 病歷號、日期、時段
+3.2. 病歷號數字部分、日期、時段
+* if exist -> Display掛號資料in Pop-up window which has "取消掛號"、"繼續掛號"（此畫面用Model dialog含一Grid顯示已經掛號資訊），其中掛號資料為"診間代號"、"序號"
+3.2.1. Pop-up window select "取消掛號"->回掛號畫面，清除掛號螢幕
+3.2.2. Pop-up window select "繼續掛號"->回掛號畫面，繼續掛號
+4. Input掛號資料
+4.1. Input診間代號（4位數字，after user input, cursor jump to序號）-> Search"掛號排班檔"帶出"診室名"、"科別名"、"醫師代號"、"醫師姓名"、"診間資訊"、此診間已給之序號（於Grid處以"＊"標示已給出的序號，否則空白。空白號數顯示至255）
+4.1.1. 停診處理：check掛號排班檔中的"是否停診"，if yes-->
+4.1.1.1. Pop up window with message"此診間已停診，無法掛入！""確定"
+4.1.1.2. "確定"後，關閉Dialog Window，原輸入的診間資料清除，其餘資料不清除
+4.1.2. 代診處理
+4.1.2.1. Pop up window with message"此診間由ＸＸＸ醫師代診！""確定"，其中ＸＸＸ為"代診醫師姓名"，按"確定"後-->
+4.1.2.2. 若"掛號排班檔"中"代診診間"有值（表合併至他診間看診），將原診間代號改為代診診間代號，並依照代診診間的醫師代號、姓名、已掛號情形作掛號動作
+4.1.2.3. 若"掛號排班檔"中"代診診間"無值（表僅替換醫師看診，診間不變），將"醫師代號"、"姓名"改為代診醫師代號、姓名即可，繼續掛號作業
+5. Call Function檢查掛號限制
+6. 給號（序號）
+6.1. Call"給號Function"，帶出Default序號，Disable"序號"欄位，不允更改
+6.2. record the number in"掛號排班檔"，mark該號已給出("掛號給號序列"中的相對應Byte mark 1)
+6.3. 序號給出後，cursor jump to"確定"鍵
+7. 掛號資料登錄、取消-->寫入"掛號看診檔"
+7.1. user click "確定"
+7.1.1. 日期、時段、診間代號、序號、醫師代號、病歷號、掛號人員代碼：對應畫面欄位
+7.1.2. 初複診掛號：初診未報到
+7.1.3. 掛號方式：當診/預約(由是否當診判斷)電話初診
+7.1.4. 重複掛號=當日該病歷掛號總數-1
+7.1.5. 開診斷書：對應畫面開診斷書欄位
+7.1.6. 調借Ｘ光：對應畫面調借Ｘ光欄位
+7.1.7. 掛號日期時間：系統日期時間
+7.1.8. create a record in"掛號看診檔"
+7.2. user click "取消"with "確定取消此筆掛號""是""否"
+7.2.1. pop-up window confirm取消
+7.2.2. after confirm clear all fields
+7.2.3. 刪除對應的掛號排班表中已給出的序號(將掛號序列中的對應序號設為0)
+8. 清除畫面-->clear all fields
+1.2.2 複診電話掛號作業（當診、預約）
+1. Disable"病歷基本資料"所有欄位
+1.1. From"病歷基本資料檔"帶出所有病歷基本資料，包括"身分"、"折扣"
+1.2. Disable所有病歷基本資料欄位，except "身分"、"折扣"
+2. if列管病人（Check病歷基本資料檔，field"列管病人"）
+2.1. Pop-up window display alert message"列管病人"with "OK" button(列管病人警告畫面)
+3. cursor jump to診間
+4. 是否已複診預約，Check 掛號看診檔with
+4.1. 病歷號、日期、時段
+4.2. 病歷號數字部分、日期、時段
+* if exist -> Display掛號資料in Pop-up window which has "取消掛號"、"繼續掛號"（此畫面用Model dialog含一Grid顯示已經掛號資訊），其中掛號資料為"診間代號"、"序號"
+4.2.1. Pop-up window select "取消掛號"->回掛號畫面，清除掛號螢幕
+4.2.2. Pop-up window select "繼續掛號"->回掛號畫面，繼續掛號
+5. Input掛號資料
+5.1. Input診間代號（cursor jump to序號）-> Search"掛號排班檔"帶出"診室名"、"科別名"、"醫師代號"、"醫師姓名"、"診間資訊"、此診間已給之序號（於Grid處以"＊"標示已給出的序號，否則空白。空白號數顯示至255）
+5.1.1. 停診處理：check掛號排班檔中的"是否停診"，if yes-->
+5.1.1.1. Pop up window with message"此診間已停診，無法掛入！""確定"
+5.1.1.2. "確定"後，關閉Dialog Window，原輸入的診間資料清除，其餘資料不清除
+5.1.2. 代診處理
+5.1.2.1. Pop up window with message"此診間由ＸＸＸ醫師代診！""確定"，其中ＸＸＸ為"代診醫師姓名"，按"確定"後-->
+5.1.2.2. 若"掛號排班檔"中"代診診間"有值（表合併至他診間看診），將原診間代號改為代診診間代號，並依照代診診間的醫師代號、姓名、已掛號情形作掛號動作
+5.1.2.3. 若"掛號排班檔"中"代診診間"無值（表僅替換醫師看診，診間不變），將"醫師代號"、"姓名"改為代診醫師代號、姓名即可，繼續掛號作業
+6. Call Function檢查掛號限制
+7. 給號（序號）
+7.1. Call"給號Function"，帶出Default序號，Disable"序號"，不允更改
+7.2. record the number in"掛號排班檔"，mark該號已給出
+7.3. 序號給出後，cursor jump to "確定"鍵
+8. 掛號資料登錄、取消（user click"確定"鍵，Pop-up window with ""確定"and "取消"）
+8.1. user click "確定"
+8.2. 日期、時段、診間代號、序號、醫師代號、病歷號、掛號人員代碼：對應畫面欄位
+8.2.1. 初複診掛號：複診
+8.2.2. 掛號方式：當診/預約(由是否當診判斷)電話複診
+8.2.3. 重複掛號=當日該病歷掛號總數-1
+8.2.4. 開診斷書：對應畫面開診斷書欄位
+8.2.5. 調借Ｘ光：對應畫面調借Ｘ光欄位
+8.2.6. 掛號日期時間：系統日期時間
+8.2.7. create a record in"掛號看診檔"
+8.3. user click "取消"
+8.3.1. pop-up window confirm取消
+8.3.2. after confirm clear all fields
+8.3.3. 刪除對應的掛號排班表中已給出的序號(將掛號序列中的對應序號設為0)
+9. 清除畫面-->clear all fields
+1.3 大量傷患掛號作業(ok)
+1. 掛號
+1.1. delete old data
+1.1.1. Search all"病歷基本資料檔"if any record with"ＫＫ"headed，delete it
+1.2. input診間代號, user input
+1.2.1. if該診間為"急診"-->call Function急診記錄
+1.3. input掛號人數 N
+1.3.1. insert N records in"病歷基本資料檔"with病歷號=ＫＫn（n=x～N)，其中x為起始號，存於"大量傷患掛號檔"中
+1.3.2. insert N records in"掛號看診檔"with病歷號=ＫＫn（n=x～N)
+1.3.3. insert N records in"病歷借出檔"with
+1.3.3.1. "病歷出庫日"=system date
+1.3.3.2. "病歷出庫時間"= system time
+1.3.3.3. "掛號方式"=大量傷患掛號
+1.3.3.4. "病歷位置"=診間代號對應"掛號排班檔"中的"診室名"
+NOTE:表示這些病歷已經出庫
+2. 重置
+2.1. Search all"病歷基本資料檔"if any record with"ＫＫ"headed -> Pop-up window with alert message"尚有未轉病歷資料之大量傷患，不能重置！"，按"確定"後跳回
+2.2. if no record with"ＫＫ"headed -> Pop-up window with message "大量傷患掛號重置成功！"
+2.3. 將"大量傷患掛號檔"中的"起始號"重置為1
+3. 列印大量傷患病歷未轉名單
+3.1. Search all"病歷基本資料檔"if any record with病歷號"ＫＫ"headed，print it，格式如下：
+大量傷患掛號未轉名單	列印日期：ＸＸＸＸＸＸＸ
+病歷號	掛號日期
+=======================
+KK1	0861225
+KKn	0861225
+========================
+共 xxx筆
+1.4 提供給其他系統用的預約掛號系統(ok)
+note:input日期(ex：0861225)、時段(1、2、3)、診間代號(ex：0107)、病歷號(ex：K212234565)、是否調借Ｘ光片（1/0）
+output：int 序號，若 < 0表掛號失敗
+1. check"病歷基本資料檔"existed, if not--> return -1
+2. check是否已預約同時段、診間
+2.1. Check 掛號看診檔with
+2.1.1. "病歷號"、"日期"、"時段"、"診間"
+2.1.2. if exist -->return -2（表示已掛過同診間同時段）
+3. 給號（序號）
+3.1. Call Function掛號給號，給Default序號
+4. Input身分別、折扣別：from病歷基本資料檔 帶出身分、折扣
+5. check掛號看診檔for重複就診號=當日掛號總數-1
+6. 初複診=複診、掛號方式=電腦代掛
+7. insert a record in"掛號看診檔"
+7.1. 是否調借Ｘ光片=input 1 or 0
+8. return序號（就診序號）
+1.5 掛號Functions(ok)
+1.5.1 Function啟動給號切點
+Variable﹕
+在"掛號排班表中"每一診間均有
+PreCurrentNumber﹕預約掛號目前將給序號
+CurrentNumber﹕現場當診掛號目前將給序號
+BackFlag﹕Flag for後段給號
+	False﹕表示為前段給號
+	True﹕表示已開始後段給號
+PreCurrentNumber及CurrentNumber為目前將給出之序號，初值為各診間之"起始號"（預設為1，除非人工在"診察室排班維護"功能中修改起始號）
+
+Procedure﹕
+1. BackFlag <- True（開始給後段號）
+2. CurrentNumber=（所有給出序號之最後一號，並跳過中間之空號）+1
+1.5.2 Function掛號給號
+1. if 預約掛號（語音、電話、現場掛非當診時段診間，且無須Check BackFlag，對預約掛號沒影響）
+1.1. return "PreCurrentNumber"
+1.2. PreCurrentNumber = 給號方式維護表中（"給號方式對照檔"）之下一可給之序號（符合預約要求，預約=1），且該診間給出序號list中未給出的序號
+2. if 現場當診掛號（現場掛號掛當診時段）
+2.1. if BackFlag = False（未啟動切點）﹕
+2.1.1.1. return CurrentNumber
+2.1.1.2. CurrentNumber = 給號方式維護表中（"給號方式對照檔"）之下一可給之序號（符合現場給號要求，現場給號=1），且該診間給出序號list中未給出的序號
+2.2. if BackFlag = True（已開始後段給號）﹕
+2.2.1.1. return CurrentNumber
+2.2.1.2. CurrentNumber = CurrentNumber + 1，且此號在該診間給出序號list中為未給出的空號
+1.5.3 Function檢查掛號限制
+1. return value
+1.1. return 0 --> check OK
+1.2. return -1 --> 該診間停診
+1.3. return -2 --> 該診間由別醫師代診
+1.4. return -3 --> 特殊診限制不符合
+1.5. return -4 --> 同時段掛同一診間
+2. Check是否掛同一診間
+2.1. check掛號看診檔，同一時段是否有掛同一診間的掛號資料
+2.2. 衝突原因="同一時段同一診間"
+3. Check特殊診限制
+3.1. if "兒童診(1)"-->年齡須<=12; 衝突原因="兒童診年齡不符"
+3.2. if "青少年診(2)" -->年齡須<=25, >12; 衝突原因="青少年診年齡不符"
+3.3. if "成人預防保健(A)" 
+3.3.1.  年齡須>=40; 衝突原因="成人預防保健年齡不符"
+3.3.2. if 40~65, check上次預防保健日期，must > 3年(系統年-上次預防保健年) ; 衝突原因="成人預防保健年限不符，上次檢查日為XXXXXXXX"
+3.3.3. if > 65, check上次預防保健日期，must > =1年(系統年-上次預防保健年) ; 衝突原因="成人預防保健年限不符，上次檢查日為XXXXXXXX"
+3.3.4. if check OK --> return True
+3.3.5. else pop-up window with掛號限制衝突！衝突原因：" 衝突原因" with "繼續掛號""取消掛號"
+3.3.5.1. if "繼續掛號"-->回原掛號畫面
+3.3.5.2. if "取消掛號"-->回原畫面並清除原輸入資料
+1.5.4 Function掛號方式計算
+1. 掛號看診檔結果欄位：假急診
+1.1. check掛號排班檔中的診別，if急診-->假急診=急診
+1.2. if假診-->假急診=假診
+1.5.5 Function掛號收費
+Revised on 97'.10.7.
+note:
+a.Get a receip number --> using stored procedure SPGetReceipNo
+b.Get registration fee --> calling RegFee(RoomType, TimeSlot, Insu_YN, c.FirstView) to get a批價代號
+d.from the 批價代號to get how much money from OrderBasic
+e.Print收據, call批價系統列印收據程式
+1. Get a 收據號碼
+1.1. call stroed procedure SPGetReceiptNo to get a receipt number
+2. 掛號費
+2.1. call RegFee(RoomType, TimeSlot, Insu_YN, FirstView) to get a批價代號
+2.1.1. RoomType: from OpdRegRoomTbl, get chRoomType
+2.1.2. TimeSlot: from OpdRegRoomTbl, get chPNC
+2.1.3. Insu_YN : from text box (身分別), if = "11" then Insu_YN="1", else Insu_YN="0"
+2.1.4. FirstView : 是否初診，是："1", 否："0"
+2.2. With the批價代號(chOrdNo), get price from GenOrdBasicTbl
+2.3. In OpdRegDiagnosisTbl
+2.3.1. 掛號費收據號碼(intReceiptNo)= 收據號碼
+2.3.2. 已批價次數(intBillSubNo)=1
+2.4. 列印掛號費收據
+2.4.1. call printing receipt procedure from TongMing's code
+1.5.6 Function列印掛號單
+1. 列印掛號單，列印格式參照系統分析報告，掛號單欄位：
+1.1. 病患姓名
+1.2. 病歷號
+1.3. 欲掛號日期
+1.4. 欲掛號時段
+1.5. 診室名（對應特定診間代號）
+1.6. 醫師姓名（對應特定診間代號）
+1.7. 序號
+1.8. 列印時間
+1.5.7 Function急診記錄
+1. insert record in急診出院病歷檔(OpdMREmergencyTbl)，欄位：
+1.1. 病歷號
+1.2. 入院日期：系統日期
+1.3. 其餘空白
+2. 語音作業(ok)
+1. Input身分證號數字部分
+1.1. 若病患輸入滿9碼之數字，視為輸入動作完成
+1.2. 若未滿9碼則等某一特定時間（3秒）後，即視為輸入動作完成
+
+* 語句message﹕
+1.  慈濟醫院您好，歡迎使用語音掛號系統
+2. 國語，輸入1，台語，輸入2，若您不會使用請按3，將由人工接聽
+3. 請上班時間再撥
+4. 掛號，輸入1，查詢掛號，輸入2，取消掛號，輸入3，本院公告，輸入4，使用說明，輸入5
+5. 病歷號重複，您是哪一位呢？
+6. 確認請按1，取消請按0
+7. 您是第一次來本院，請於當日當診到掛號櫃台報到
+8. 請於當日該診看診前，先至診間報到
+9. 您預約的日期﹑午別﹑醫師﹑就診序號
+10. 確認請按1，取消請按0，再聽一次請按2
+11. 您取消的日期是某日、某時段、醫師姓名、序號，確認請按1，取消請按0
+12. 某某某醫師停診，請稍待！
+13. 某某某醫師當日由某某某醫師代診，是否繼續掛號？1﹕繼續掛代診之醫師；0﹕回到問候語
+2.1 語音掛號
+1. Get identified-->Check"病歷基本資料檔""身分證數字部份"with input number
+1.1. if not existed -->初診
+1.2. if existed and only one -->
+1.2.1. 複診
+1.3. if existed and more than one -->
+1.3.1. 重複播放，直至identified-->複診
+2. Input Date格式為"mmdd"
+3. Input時段
+4. Input醫師代號
+5. From "掛號排班檔"match"日期"、"時段"、"醫師代號"相符之診間
+5.1.1. 停診處理：check掛號排班檔中的"是否停診"，if yes-->
+5.1.1.1. 播放停診語句
+5.1.1.2. 轉由人工接聽
+5.1.2. 代診處理
+5.1.2.1. 播放代診語句，並輸入選擇1,2,3(1表序掛代診醫師，2表回到功能選擇，3表轉人工接聽)，若為1-->
+5.1.2.1.1. 若"掛號排班檔"中"代診診間"有值（表合併至他診間看診），將原診間代號改為代診診間代號，並依照代診診間的醫師代號、姓名、已掛號情形作掛號動作
+5.1.2.1.2. 若"掛號排班檔"中"代診診間"無值（表僅替換醫師看診，診間不變），將"醫師代號"、"姓名"改為代診醫師代號、姓名即可，繼續掛號作業
+5.2. call Function檢查掛號限制
+5.3. relative processing for return value
+6. From"掛號排班檔"match"日期"、"時段"、"醫師代號"相符之診間
+6.1. Call "掛號給號"Function
+7. report result
+7.1. if 初診 -> play 初診 msg
+7.2. else if小兒科複診 -> play 小兒科複診msg
+7.3. result reporting -> play msg
+7.4. if confirmed ->
+7.4.1. 重複就診號=當日掛號總數-1
+7.4.2. insert a record in"掛號看診檔"，"掛號方式"=預約（當診）語音初診（複診）
+2.2 語音查詢掛號
+1. Check"掛號看診檔"with input number
+1.1. if not existed -> play nonexist msg
+1.2. else if existed -> play all registration record with msg
+2.3 語音取消掛號
+1. Check"掛號看診檔"with input number
+1.1. if not existed -> play msg
+2. Input"日期"（mmdd）
+3. Input"時段"(1，2 or 3)
+4. Input"醫師代號"
+5. report result
+6. if confirmed ->
+6.1. input退掛資訊into that record（including"date、time"）
+2.4 語音本院公告、使用說明
+1. play user recorded message
+3. 其他掛號作業(ok)
+3.1 退掛作業（現場、電話人工接聽）(ok)
+說明：各control及程式中的變數名請參考"程式製作規範"的規定，例如"病歷號"在資料庫中命名為"chMRNo"，若某control為TextBox代表病歷號，則將其命名為"txtchMRNo"
+1. Input 病歷號，search病歷基本資料檔with病歷號
+1.1. if existed-->帶出"姓名、法名、性別" （cursor jumpt to"日期"）
+else -->pop up window with message "病歷資料庫中無此病歷號！"
+病歷號.setfocus
+2. search掛號看診檔for所有掛號資料，並顯示於下方list中（以如下條件）
+* select with病歷號、今天及以後的日期、所有時段（不管是否已看診）
+* select with病歷號數字部份、今天及以後的日期、所有時段（不管是否已看診）
+2.1. if no registration record -->Pop-up window with alert"無掛號資料"
+3. Identify which registration record to delete，two ways to input registration data:
+3.1. Select from the list with mouse click list中的某一筆掛號資料 or
+3.2. Input"日期"、"時段"、"診間代號"
+3.2.1. input日期後，算出並顯示星期幾(press enter,cursor jump to時段)
+3.2.2. 時段輸入1,2,3對應顯示"早"，"午"，"晚" (press enter,cursor jump to診間)
+3.2.3. input診間代號（用event change,input數字len=4才作用）from"診間排班檔"(OpdRegRoomView)帶出診室名、科別名、醫師代號、醫師姓名; 若該時段無此診間pop up window with message "無此診間資料"(press enter,cursor jump to搜尋掛號資料)
+3.2.4. click搜尋掛號資料-->search掛號看診檔with日期、時段、診間、病歷號
+if existed-->display序號，並繼續以下動作
+else pop up window with message "無此掛號資料"
+4. brint out看診情況，from掛號看診檔
+4.1. if "已看診"="0"，"已看診"display blank，看診時間=blank
+elseif "1"，"已看診"display "Y"，看診時間=看診時間（chDiagTime）
+4.2. if病歷出庫時間(chMROutTime)not null--> 病歷已送診間display "Y"
+5. user click"確定"
+5.1. confirm message, pop up window with message
+ "確定刪除此筆掛號資料：
+日期：ＸＸＸＸＸＸＸ
+時段：Ｘ
+診間：ＸＸＸＸ
+序號：ＸＸＸ"with Yes, No
+5.2. if click 'Yes'-->update"退掛資訊"into"掛號看診檔"with matched record（"日期"、"時段"、"診間"、"序號"）
+5.2.1. 刪除否(chIfWithdraw)=1
+5.2.2. 取消掛號人員代碼(chWithdrawEmpNo)=操作人員代碼
+5.2.3. 取消掛號日(chWithdrawDate)=system date
+5.2.4. 取消掛號時間(chWithdrawTime)=system time
+5.3. click清除畫面-->將所有輸入、顯示的欄位清空
+5.4. 退費處理(not yet, 97.9.1 Tim, need to negotiate with TongMing)
+5.4.1. bring out"掛號費"、"部分負擔"from"掛號看診檔"
+5.4.2. 將"掛號看診檔"中的"是否已收掛號費"設為No
+5.4.3. 將原發出之收據號取消(check批價系統)
+3.2 轉掛作業(ok)
+1. Input 病歷號，from病歷基本資料檔帶出"姓名、法名、性別" （cursor jumpt to原掛號資料的"日期"）
+2. search掛號看診檔with病歷號for所有掛號資料，並顯示於下方list中
+2.1. select with病歷號、今天及以後的日期、所有時段，且未看診
+2.2. select with病歷號數字部份、今天及以後的日期、所有時段，且未看診
+2.3. if no registration record -->Pop-up window with alert"無掛號資料"
+3. input原掛號資料-->two ways to input
+3.1.1. input日期、時段(input 1,2,3帶出早午晚,bound to local MDB)、診間(from OpdRegRoomView帶出診室名、科別名、醫師代號、醫師名)(input診間後cursor jumpt to轉掛資料中的日期)
+3.1.2. user click list中的某筆掛號資料，將掛號資料帶入"原掛號資料"中(click後cursor jump to轉掛資料中的日期)
+4. 帶出身分別、折扣別及序號(from掛號看診檔中的"intRegNo", "chInsuType", "chDCTType"欄位)
+5. input轉掛資料
+5.1. 日期
+5.2. 時段(input 1,2,3,帶出早午晚,bound to local MDB)
+5.3. Input診間代號（cursor jump to序號）-> Search"掛號排班檔"帶出"診室名"、"科別名"、"醫師代號"、"醫師姓名"、診間資訊、此診間已給之序號（於Grid處以"＊"標示已給出的序號，否則空白。空白號數顯示至255,Grid僅顯示已掛出號數，不讓user access）
+5.4. 帶出診間資訊，已掛人數在display grid時即可一併計算，限掛人數、預約限額由掛號排班檔對應欄位帶出
+6. Call Function檢查掛號限制
+7. 給號（序號）
+7.1. Call Function掛號給號，帶出Default序號
+8. 掛號資料登錄、取消-->修改並寫入"掛號看診檔"
+8.1. user click"確定",pop up window with message "確定轉掛", Yes, No
+8.1.1. 日期、時段、診間代號、序號、醫師代號、病歷號、身分別、折扣別、掛號人員代碼：對應畫面欄位
+8.1.2. 初複診掛號：複診
+8.1.3. 假急診：自"掛號排班檔"中的"診別"抓出
+8.1.4. 掛號方式：當診/預約(由是否當診判斷)現場複診
+8.1.5. 重複掛號=當日該病歷掛號總數-1
+8.1.6. 開診斷書：對應畫面開診斷書欄位
+8.1.7. 調借Ｘ光：對應畫面調借Ｘ光欄位
+8.1.8. 掛號日期時間：系統日期時間
+8.1.9. create a record in"掛號看診檔"
+8.1.10. Call列印掛號單Function
+9. user click"確定"-->前一筆掛號資料取消
+9.1. update"退掛資訊"into"掛號看診檔"with matched record（"日期"、"時段"、"診間"、"序號"）
+9.1.1. 刪除否=1
+9.1.2. 取消掛號人員代碼=操作人員代碼
+9.1.3. 取消掛號日=system date
+9.1.4. 取消掛號時間=system time
+9.2. user click "取消"
+9.2.1. pop-up window confirm取消with "確定取消此筆轉掛""是""否"
+9.2.2. after confirm, clear all fields
+10. 清除畫面:clear all fields
+3.3 預約掛號報到作業(ok)
+1. Input 病歷號（cursor jumpt to健保卡序號）
+2. check是否已初診預約
+2.1. search 掛號看診檔with病歷號、病歷號數字部分且出複診掛號("chRegFM")為初診未報到(0)，找出初診掛號資料顯示掛號資料，掛號資料為
+* 日期(計算並顯示星期)、時段(123對應早午晚bound local MDB)、診間(帶出診室名、科別名)、醫師代號、醫師姓名、就診序號，該診間給號序列列於Grid中，僅display，不允user變動
+2.1.1. if exist only one record-> bring掛號資料
+2.1.2. if exist more than one record -> bring掛號資料with priority：
+2.1.2.1. 當診當時段
+2.1.2.2. nearest date and time
+2.1.3. if no record exist -> Pop-up window with alert"無預約掛號資料"
+3. Input健保卡序號、轉入醫院（From local MDB"轉診醫院對照檔"）（cursor jump to身分）
+4. Input身分（"身分檔"）、折扣（"折扣檔"）cursor jumpt to身分證號
+5. Input病患基本資料
+5.1. if"病歷號"為10個文數字，將"病歷號"Copy至"身分證號"，otherwise"身分證號"空白
+5.2. Input"性別"、"姓名"、"法名"
+5.3. Input生日
+5.3.1. 民國前以"-999999"格式，民國後以"9999999"格式input
+5.3.2. 以"系統年" - "生日年"，帶出歲數
+5.4. Input出生地、籍貫、語言、種族、住址、電話（Ｈ）、電話（Ｏ）(語言、種族bound with local MDB)
+6. 收費
+6.1. if user click "收費"，Call"掛號收費Function"
+7. 掛號資料登錄、取消，user click "確定"-->
+7.1. 建立基本資料
+7.1.1. create record in病歷基本資料檔
+7.2. 修改"掛號看診檔"（該掛號記錄已存在）
+7.2.1. 日期、時段、診間代號、序號、醫師代號、病歷號、部份負擔代碼、健保卡序號、身分別、折扣別、掛號人員代碼：對應畫面欄位
+7.2.2. 初複診掛號：初診已報到
+7.2.3. 掛號方式：當診/預約(由是否當診判斷)現場初診
+7.2.4. 重複掛號=當日該病歷掛號總數-1
+7.2.5. 開診斷書：對應畫面開診斷書欄位
+7.2.6. 調借Ｘ光：對應畫面調借Ｘ光欄位
+7.2.7. 掛號日期時間：系統日期時間
+7.2.8. Call列印掛號單Function
+7.3. Search"掛號看診檔",if there is any "初診預約掛號"records with the same病歷號數字部分, modify該record's初複診欄位from"初診"to"複診"modify病歷號from身分證數字部份to病歷號(True病歷號)（掛號方式不變）
+* if user click "取消"
+7.4. pop-up window confirm取消
+7.5. after confirm clear all fields
+8. 清除畫面-->clear all fields
+3.4 診斷書編號作業(ok)
+1. text box Input 病歷號，帶出基本資料from病歷基本資料檔
+2. 開立診斷書作業
+2.1. 診斷書編號format X99999999，其中X為對應的診斷書代號（記錄於"診斷書檔"中），三碼為年度（如民國一百年為"100"），後五碼為該種診斷書的流水號（記錄於"診斷書檔"中）
+2.2. 診斷書種類Combo box，選項內容為from診斷書檔
+2.3. input 科別代號，from科別檔，帶出科別名稱
+2.4. from診斷書檔，帶出將給出的號碼
+2.5. free text欄位由user自由輸入
+2.6. "確定"-->
+2.7. insert record in診斷書管理檔
+2.8. update對應的診斷書種類流水號，為原流水號+1，表下一次將給出的診斷書流水號
+3. 診斷書查詢
+3.1. user click"查詢"-->
+3.2. search"診斷書管理檔"for all the matched病歷號，顯示所有記錄的"開立日期"、"科別"、"診斷書編號"
+4. 查詢列印作業(ok)
+4.1 病患掛號資料查詢列印作業(ok)
+1. 兩種查詢方式before user click"查詢"-->
+1.1. input病歷號
+1.2. input時段、診間代號、序號-->get病歷號 from掛號看診檔
+2. 帶出資訊
+2.1. 病歷狀態、病歷位置from病歷基本資料檔（以病歷號seek）
+2.2. 病歷基本資料所有欄位from 病歷基本資料檔
+2.3. 掛號資料，from"掛號看診檔"帶出該病歷號今天以後的所有掛號看診資料，顯示於下方的List中，欄位為﹕
+2.3.1. 日期
+2.3.2. 時段
+2.3.3. 診間代號
+2.3.4. 科別
+2.3.5. 序號
+2.3.6. 醫師姓名
+2.3.7. 病歷出庫時間
+2.3.8. 掛號日期時間
+2.3.9. 掛號方式
+2.3.10. 看診時間
+2.3.11. 掛號員
+3. user click列印掛號資料--> print out
+3.1. 病歷號、姓名
+3.2. List中的所有資料
+4. user click列印病歷調閱單 （病歷組使用）-->
+4.1. focus on one record in the list指到在"掛號看診檔中"對映的記錄
+4.2. call病歷調閱單列印subroutine
+5. user click欠款明細
+5.1. pop-up window, from欠款明細檔display all the records
+4.2 病歷基本資料更改列印作業(ok)
+1. 病歷基本資料更改
+1.1. Input病歷號
+1.2. Search"病歷基本資料檔"and display all data fields（user可自由修改）
+1.3. 按"確定"後，Pop-up window with all the new data fileds
+1.3.1. if 修改"身分證號"、"姓名"、"生日"任一欄位
+1.3.1.1. 身分證號-> "病歷基本資料檔"的"身分證號"
+1.3.1.2. 姓名-> "病歷基本資料檔"的"新姓名"
+1.3.1.3. 生日-> "病歷基本資料檔"的"新生日"
+1.3.1.4. insert record in"門診病歷基本資料修改檔"
+1.3.2. if修改其他欄位
+1.3.2.1. 直接修改"病歷基本資料檔"的對映欄位
+2. 列印所有門診病歷基本資料修改記錄
+2.1. for all the records in "門診病歷基本資料修改檔"，print it out（格式參考SA result）
+4.3 診間掛號資料查詢列印作業(ok)
+1. 查詢
+1.1. input"日期"Defalt=system日期，可修改
+1.2. input"時段"Defalt=system時段，可修改
+1.3. input"診間代號"
+1.4. 按"查詢"
+1.4.1. if"日期"= blank --> error﹐alert with pop-up window message"須輸入日期"
+1.4.2. else if"時段"= blank -> 
+1.4.2.1. Search all data in"掛號看診檔"with matched"日期"
+1.4.2.2. if"日期"matched and not"退掛"->
+1.4.2.2.1. if"重複就診號"> 0 -> Search the displayed record (已經在list中)with matched"病歷號"and"日期" display多科掛號資訊in"多科"欄，多科掛號資訊為"時段  診室名  序號"，如"早  骨01  32"
+1.4.2.2.2. else -> add the record to the list
+1.4.3. else if "診間"= blank ->
+1.4.3.1. Search all data in"掛號看診檔"with matched"日期"、"時段"
+1.4.3.2. if"日期"and"時段"matched and not"退掛"->
+1.4.3.2.1. if"重複就診號"> 0 -> Search the displayed record with matched"病歷號"and"日期" and"時段" display多科掛號資訊in"多科"欄位
+1.4.3.2.2. else -> add the record to the list
+1.4.4. else（日期、時段、診間都有值）->
+1.4.4.1. Search all data in"掛號看診檔"with matched"日期"、"時段"、"診間代號"
+1.4.4.2. if"日期"and"時段"and"診間代號"matched and not"退掛"-> 
+1.4.4.2.1. if"重複就診號"> 0 -> Search the displayed record with matched"病歷號"and"日期" and"時段"and"診間代號" display多科掛號資訊in"多科"欄位
+1.4.4.2.2. else -> add the record to the list
+1.4.4.3. count該診間的"已看診人數"and display
+2. 列印--> print out
+2.1. 診間資訊-->日期、星期、時段、診間代號、科別、醫師代號、醫師姓名
+2.2. list中的所有內容
+3. 退掛查詢
+3.1. Search all data in"掛號看診檔"with the same condition as above:if condition matched and"刪除"-> display the record
+4. 下一診間(只在日期、時段、診間皆有值Click才反應)
+4.1. from掛號看診檔search下一"診間代號"（診間代號為primary key之一，故已經sort過），display該診號的所有資料，顯示方法與上同
+5. 列印所有診間
+5.1. if"日期"=blank-->error﹐alert with pop-up window message"須輸入日期"
+5.2. else -->Search all data in"掛號看診檔"with matched"日期"
+5.3. Print out all the matched records（格式請參考SA result）
+5. 檔案維護作業(ok)
+5.1 掛號排班維護作業
+1. user input
+1.1. 排班日期-->user input日期，帶出星期，或input規則排班日期（0111111～0111110）帶出對映的星期（參見系統分析報告的星期對映）
+1.2. 時段-->輸入1、2、3帶出早、午、晚，或由Combo Box選擇時段
+1.3. 診間代號-->4位數字
+1.4. 科別-->input兩位數字，帶出科別名稱from科別檔
+1.5. 診室名-->free text
+1.6. 醫師代號-->5位數字，帶出醫師姓名from醫師檔，及申報醫師代號、申報醫師姓名
+1.7. 診別-->Combo Box from診別檔
+1.8. 特殊診-->Combo Box from特殊診檔
+1.9. 語掛時限-->4位數字，表hhmm
+1.10. 平均看診時間-->4位數字，表hhmm
+1.11. 預約限額-->數字，對映"掛號排班表"或"規則排班表"中的"預約限額"欄位
+1.12. 限掛人數-->數字，對映"掛號排班表"或"規則排班表"中的"限掛人數"欄位
+1.13. 起始號-->對映"掛號排班表"或"規則排班表"中的"起始號"欄位
+1.14. 目前給號-->對映"掛號排班表"中的"語音下一號"欄位
+1.15. 給號方式-->對映"掛號排班表"或"規則排班表"中的"給號方式"欄位
+2. 查詢
+2.1. check排班日期、時段、診間代號
+2.1.1. if排班日期=blank--> 
+2.1.1.1. list對映欄位中display all records in"掛號排班檔"with matched時段and診間代號（"時段"或"診間代號"可為blank，表示所有的都符合查詢條件）
+2.1.2. else if 排班日期=某日期（如0861225）-->
+2.1.2.1. list對映欄位中display all records in"掛號排班檔"with matched時段and診間代號（"時段"或"診間代號"可為blank，表示所有的都符合查詢條件）
+2.1.3. else if 排班日期=規則排班日期（0111111～0111110）-->
+2.1.3.1. list對映欄位中display all records in"規則排班檔"with matched日期、時段and診間代號（"時段"或"診間代號"可為blank，表示所有的都符合查詢條件）
+2.2. if user click特定一筆記錄於下方的List中-->帶出所有相關資料於上方的對映欄位from"掛號排班檔"或"規則排班檔"
+3. 新增
+3.1. check"掛號排班檔"或"規則排班檔"中的日期、時段、診間，是否已經存在資料（此三欄位分為該檔之primary key）, if exist--> error alert"該時段已存在該診間資料，不允新增"with"確定"
+3.2. if not existed--> insert new one into "掛號排班檔"or"規則排班檔"
+4. 刪除
+4.1. search a specific record in "掛號排班檔"or"規則排班檔"with matched日期、時段、診間代號
+4.2. if there is any record in"掛號看診檔"with the same 日期、時段、診間--> pop-up window message"ＸＸ日ＸＸ時段ＸＸ診間，已有掛號資料，不允刪除"with"確定"
+4.3. pop-up window message"確定刪除ＸＸ日ＸＸ時段ＸＸ診間"with"確定"、"取消"
+4.3.1. if"確定"-->逕行刪除"掛號排班檔"or"規則排班檔"中的記錄
+5. 修改(user修改過某些欄位資料)
+5.1. search a specific record in "掛號排班檔"or"規則排班檔"with matched日期、時段、診間代號
+5.2. update the record
+6. 清除畫面
+6.1. clear all fields
+5.2 停診、代診作業
+1. 此功能作業畫面為掛號排班維護作業
+2. 停診
+2.1. user於停診處勾選此診間停診，於掛號排班檔中的對應診間記錄中記錄停診（所有掛號系統掛號時均需參考此欄位，語音掛號時亦須播放特別語句）
+3. 代診
+3.1. user於停診處勾選此診間代診，於掛號排班檔中的對應診間記錄中記錄代診，並須輸入代診醫師代號，此時分兩個狀況(以代診醫師代號search掛號排班檔中的診間醫師欄位for診間資料)
+3.1.1. 此代診醫師同一時段無其他正常門診診間-->
+3.1.1.1. 直接於掛號排班檔對應診間中，記錄代診訊息及醫師代號，此資料將於掛號作業時被用到。
+3.1.2. 此代診醫師同一時段尚有其他診間-->須做診間病患合併
+3.1.2.1. 顯示所有代診醫師的診間（該醫師可能有多於兩間的診間），於user選定特定一間代診醫師的診間
+3.1.2.2. 於掛號排班檔對應診間中，記錄代診訊息及醫師代號
+3.1.2.3. 將現有的病患合併到代診診間（改動掛號看診檔中的掛號資料，診間代號及醫師代號都要update），以有空號便插空號的方式，若無空號則接於代診診間已掛出的所有號碼之後，亦須變動掛號排班檔的診間給號list（做此動作前須先鎖定此診間的掛號排班資料，不允許別人在合併途中掛進來）
+3.1.2.4. 再來掛原診間的掛號將直接被掛進代診診間。
+note:此診間並未"停診"，不管是現場或語音皆可掛入，只是掛此診間的資料等於直接掛到代診診間
+5.3 醫師檔維護作業
+1. Direct access to"醫師檔"
+5.4 轉診/轉檢醫院維護作業
+1. Direct access to"轉診醫院對照檔"
+5.5 假日維護檔作業
+1. 顯示
+1.1. default為該年(from system date)所有標定為假日之日期，分為欄(List box)分別為1～3月份、4～6月份、7～9月份、10～12月份
+1.2. user click"下一年"、"前一年"--> 帶出對映的假日於相關的list中
+2. 新增
+2.1. input月、日對映欄位，月份欄位書滿兩位數字，自動跳到"日"欄位，cursor跳至"新增"
+2.2. user click"新增"（或按Enter），於新增該"年月日"於"假日檔"中
+3. 刪除(此處僅抓mouse click information可能很不好處理，因為有四個list box)
+3.1. input月、日對映欄位，月份欄位書滿兩位數字，自動跳到"日"欄位，cursor跳至"新增"
+3.2. user click"刪除"-->pop-up window with"確定刪除"、"取消刪除"，if"確定刪除"--> delete relative年月日，於"假日檔"中
+5.6 病歷歸還登錄單
+這是在系統確認後又新加的功能，只是輸入後列印東西出來而已97/05/30
+1. Ask input local file (.TXT)
+1.1. 已存在的叫出來，不存在則create新檔
+2. input data into list
+2.1. 病歷號
+2.2. 日期
+2.3. 時段
+2.4. 診間
+3. 列印，sort by病歷號（由小至大，先排英文再排數字）
+3.1. 列印日期、時間
+3.2. 病歷號
+3.3. 姓名：自"病歷基本資料檔"中抓出
+3.4. 日期時段
+3.5. 診間
+4. 存檔
+4.1. 存在Local的.TXT File
+6. 日結轉檔、統計(ok)
+6.1 日結統計
+1. 掛號人數統計檔
+1.1. 日期﹕該看診日
+1.2. 時段﹕分為早、午、晚
+1.3. 科別代號﹕依每一科別做統計
+1.4. 急診否﹕該診間是否為急診診間
+1.5. 週間假日﹕
+1.5.1. 週間﹕星期一至星期五
+1.5.2. 週六﹕星期六
+1.5.3. 假日﹕週日及國定假日（由假日檔判斷）
+1.6. 診數：check掛號排班檔，Sum of診間數where科別=某一特定科別
+1.7. 以下欄位均要檢查已看診<>blank
+1.8. 初診人數：check掛號看診檔，Sum of初診人數(from掛號方式欄位)
+1.9. 複診人數：check掛號看診檔，Sum of複診人數(from掛號方式欄位)
+1.10. 門診人數：check掛號看診檔，Sum of掛號人數(from掛號方式欄位)
+1.11. 急診人數：check掛號看診檔，Sum of急診掛號人數(from假急診欄位)
+1.12. 假診人數：check掛號看診檔，Sum of假診掛號人數(from假急診欄位)
+1.13. 健保人數：check掛號看診檔，Sum of健保掛號人數(from身分別欄位)
+1.14. 自費人數：check掛號看診檔，Sum of自費掛號人數(from身分別欄位)
+2. 醫師服務統計檔
+2.1. 以下欄位均要檢查已看診<>blank
+2.2. 看診數：Sum of掛號人數where醫師代號=特定醫師代號（if代診-->用代診醫師代號做統計）
+3. 掛號方式統計檔
+3.1. 以下欄位均要檢查已看診<>blank
+3.2. 現場初、複診人數：check掛號看診檔，Sum of現場初診人數(from掛號方式欄位)
+3.3. 語音初、複診人數：check掛號看診檔，Sum of語音初診人數(from掛號方式欄位)
+3.4. 電話初、複診人數：check掛號看診檔，Sum of語音初診人數(from掛號方式欄位)
+3.5. 電腦代掛人數：check掛號看診檔，Sum of電腦代掛人數(from掛號方式欄位)
+3.6. 退掛人數：check掛號看診檔，Sum of退掛人數(from刪除否欄位)
+3.7. 預掛人數：check掛號看診檔，Sum of預掛人數(from掛號方式欄位，所有種類的預約掛號)
+4. 掛號員服務統計檔
+4.1.  服務人數：from掛號看診檔，Sum of掛號人數，不管是否看診where掛號員=特定掛號員
+5. 所有統計都處理後，mark掛號看診檔中的已統計欄位，表示該比記錄已經過統計
+6.2 日結爽約及看診維護
+1. check掛號看診檔for當日掛號看診的每一筆資料
+2. 看診資料異動(in病歷基本資料檔)
+2.1. 最後看診日：update為就診日
+2.2. 最後看診科別：update為當日就診科別
+3. 預約掛號爽約處理
+3.1. if掛號方式=預約掛號（所有種類的預約掛號）& 看診時間=blank（未看診） & 刪除否=No（未退掛） -->爽約
+3.1.1. update病歷基本資料中的最後爽約日，改為該掛號就診日
+3.1.2. update病歷基本資料中的爽約次數+1
+3.2. else(未爽約)-->
+3.2.1. update病歷基本資料中的爽約次數=0
+6.3 日結排班複製
+目的：copy規則排班表中的某一日（特定星期幾）所有排班資料至35天後的那一日的掛號排班檔中
+1. Check今日日期、星期，Target日期=今日日期+35
+2. Check假日檔，check Target日期是否為假日
+2.1. if not 假日-->for所有當日診間記錄in規則排班檔，check掛號排班檔中的Target日期，該診間是否已存在
+2.1.1. if not existed-->copy至掛號排班檔中Target日期的記錄
+2.1.2. else already existed -->no action
+2.2. else (假日)-->no action
+7. 統計列印作業(ok)
+7.1 門診服務量統計
+1. select"年統計"、"月統計"、或是"當日當時為止"的統計
+2. 年統計﹕input年（民國ＸＸ年），from掛號人數統計檔，以科別排序（小至大），輸出格式參考系統分析報告
+2.1. 健保（早、午、晚）、一般（早、午、晚）-->
+2.1.1. 初診﹕Sum of某年次、某科別、某時段的"初診人數"
+2.1.2. 複診﹕Sum of某年次、某科別、某時段的"複診人數"
+2.1.3. 門診﹕Sum of某年次、某科別、某時段的"門診人數"
+2.1.4. 急診﹕Sum of某年次、某科別、某時段的"急診人數"
+2.1.5. 夜診﹕Sum of某年次、某科別、某時段的"夜診人數"
+2.1.6. 假診﹕Sum of某年次、某科別、某時段的"假診人數"
+2.2. 合計（早、午、晚）﹕"健保"+"一般"
+2.3. 總計﹕初診（早、午、晚）+複診（早、午、晚）
+2.4. 診次（早、午、晚）﹕Sum of某年次、某科別、某時段的"診數"
+2.5. 總合計﹕所有分項數字的總合
+3. 月統計﹕input某年某月
+3.1. 健保（早、午、晚）、一般（早、午、晚）-->
+3.1.1. 初診﹕Sum of某月份、某科別、某時段的"初診人數"
+3.1.2. 複診﹕Sum of某月份、某科別、某時段的"複診人數"
+3.1.3. 門診﹕Sum of某月份、某科別、某時段的"門診人數"
+3.1.4. 急診﹕Sum of某月份、某科別、某時段的"急診人數"
+3.1.5. 夜診﹕Sum of某月份、某科別、某時段的"夜診人數"
+3.1.6. 假診﹕Sum of某月份、某科別、某時段的"假診人數"
+3.2. 合計（早、午、晚）﹕"健保"+"一般"
+3.3. 總計﹕初診（早、午、晚）+複診（早、午、晚）
+3.4. 診次（早、午、晚）﹕Sum of某月份、某科別、某時段的"診數"
+3.5. 總合計﹕所有分項數字的總合
+4. 當日當時為止
+4.1. 先做統計動作，與日結的統計步驟相同，但不轉入統計檔中，以Temp的"掛號人數統計檔"做統計-->
+4.1.1. Create Temp"掛號看診檔"
+4.1.2. 與日結統計掛號人數相同，將統計資料記錄於Temp檔中
+4.1.3. 於Temp"掛號人數統計檔中"，帶出所有今日掛號統計資料
+4.1.4. "掛號看診檔"中的記錄於統計過後，不標記"已統計"，留給日結的時候做更正確的統計
+4.1.5. delete Temp掛號人數統計檔
+4.2. 健保（早、午、晚）、一般（早、午、晚）-->
+4.2.1. 初診﹕Sum of某月份、某科別、某時段的"初診人數"
+4.2.2. 複診﹕Sum of某月份、某科別、某時段的"複診人數"
+4.2.3. 門診﹕Sum of某月份、某科別、某時段的"門診人數"
+4.2.4. 急診﹕Sum of某月份、某科別、某時段的"急診人數"
+4.2.5. 夜診﹕Sum of某月份、某科別、某時段的"夜診人數"
+4.2.6. 假診﹕Sum of某月份、某科別、某時段的"假診人數"
+4.3. 合計（早、午、晚）﹕"健保"+"一般"
+4.4. 總計﹕初診（早、午、晚）+複診（早、午、晚）
+4.5. 診次（早、午、晚）﹕Sum of某月份、某科別、某時段的"診數"
+4.6. 總合計﹕所有分項數字的總合
+7.2 醫療服務量月統計表（一）
+依科別統計看診人數，但其中的內科為大內科，包刮心臟內科（20）、胸腔內科（19）、腎臟內科（22）、腸胃內科（23）、一般內科（01）
+1. input"年"、"月"
+2. 健保﹕Sum of該月份所有時段，某科別健保掛號人數
+3. 一般﹕Sum of該月份所有時段，某科別一般掛號人數
+4. 合計﹕健保+一般
+5. 初診﹕Sum of該月份所有時段，某科別初診掛號人數
+6. 初診率﹕初診/合計 * 100%
+7. 日平均人數（小數點下一位）﹕Sum of 該時段星期一至星期六（非假日，由掛號人數統計檔中的"週間假日"欄位判斷）看診人數總合/5.5
+8. 週間平均人數（小數點下一位）﹕Sum of 該時段星期一至星期五（非假日，由掛號人數統計檔中的"週間假日"欄位判斷）看診人數總合/週間總日數（不含假日）
+9. 週六平均人數（小數點下一位）﹕Sum of 該時段所有星期六（非假日，由掛號人數統計檔中的"週間假日"欄位判斷）看診人數總合/週六總日數（不含假日）
+10. 假日平均人數（小數點下一位）﹕Sum of 該時段所有假日（由掛號人數統計檔中的"週間假日"欄位判斷）看診人數總合/假日總日數
+11. 報表格式參考系統分析報告書
+7.3 醫療服務量月統計表（二）
+依科別統計看診人數，但其中的內科為大內科，包刮心臟內科（20）、胸腔內科（19）、腎臟內科（22）、腸胃內科（23）、一般內科（01）
+1. input"年"、"月"
+2. 種類﹕
+2.1. 一般門診﹕含時段為早、午及非假日、非急診的門診
+2.2. 夜間門診﹕含時段為晚即非假日、非急診的看診
+2.3. 假日門診﹕含時段為早、午、晚，假日的看診
+2.4. 急診﹕含時段為早、午、晚，急診診間的看診
+3. 健保﹕Sum of該月份所有時段，某科別健保掛號看診人數
+4. 一般﹕Sum of該月份所有時段，某科別一般掛號看診人數
+5. 合計﹕健保+一般
+6. 診平均﹕合計/診數
+7. 診數﹕Sum of該月份所有時段，某科別診間總數
+8. 報表格式參考系統分析報告書
+7.4 各醫師門診人數統計月報表
+1. input"年"、"月"
+2. 每一醫師每日各時段看診人數，由醫師服務月統計檔讀出
+3. 報表格式參考系統分析報告書
+7.5 各科人數月統計表
+1. input"年"、"月"，此統計的科別分次專科，而不是大內科
+2. 種類﹕
+2.1. 一般門診﹕含時段為早、午及非假日、非急診的門診
+2.2. 夜間門診﹕含時段為晚即非假日、非急診的看診
+2.3. 假日門診﹕含時段為早、午、晚，假日的看診
+2.4. 急診﹕含時段為早、午、晚，急診診間的看診
+3. 依科別、日期、種類統計
+3.1. 看診人數﹕該日該科該種類別看診人數
+3.2. 診次﹕該日該科別該種類診次
+4. 報表格式參考系統分析報告書
+7.6 掛號方式統計
+1. select"年統計"or"月統計"
+2. input特定"年"or"年"、"月"
+3. 依時段（早、午、晚）由"掛號方式統計檔"做該時段的統計
+4. 報表格式參考系統分析報告書
+7.7 掛號員各人每月工作統計表查詢或列印
+1. select"年統計"or"月統計"
+2. input特定"年"or"年"、"月"
+3. 依掛號員別"掛號員服務統計檔"做該時段的統計
+4. 報表格式參考系統分析報告書
+醫院資訊系統                 門診掛號作業系統                系統設計
+
+前端科技資訊公司, 3/30/2026印 文件1 Page : 2 of 38
+

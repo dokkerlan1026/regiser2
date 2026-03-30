@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>門急診醫囑 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>門(急)診醫囑系統</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html" class="active">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./doctor-system.html">醫生系統首頁</a>
+      <a href="./departments.html">科別管理</a>
+      <a href="./schedule.html">排班管理</a>
+      <a href="./rules.html">規則與給號</a>
+      <a href="./orders.html" class="active">門急診醫囑</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <article class="card">
+        <h2>醫囑開立</h2>
+        <div class="field-grid">
+          <label>掛號紀錄<select id="order-registration"></select></label>
+          <label>類型
+            <select id="order-type">
+              <option value="藥品">藥品</option><option value="處置">處置</option><option value="治療">治療</option>
+              <option value="檢查">檢查</option><option value="醫材">醫材</option><option value="其他">其他</option>
+            </select>
+          </label>
+          <label>名稱<input id="order-name" /></label>
+          <label>劑量<input id="order-dose" type="number" min="0" value="1" step="0.1" /></label>
+          <label>頻率(每日)<input id="order-freq" type="number" min="0" value="1" step="0.1" /></label>
+          <label>天數<input id="order-days" type="number" min="1" value="1" /></label>
+          <label>單價<input id="order-price" type="number" min="0" value="0" /></label>
+          <label class="span-2">備註<input id="order-note" /></label>
+        </div>
+        <button id="btn-add-order">新增醫囑</button>
+        <div class="table-wrap"><table id="orders-table"></table></div>
+      </article>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>批價收費 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div><h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1><p>門診批價(收費)系統</p></div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html" class="active">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./billing-system.html">批價櫃台首頁</a>
+      <a href="./billing.html" class="active">批價收費</a>
+      <a href="./reports.html">統計報表</a>
+      <a href="./lookup.html">掛號查詢</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <article class="card">
+        <h2>批價收費</h2>
+        <div class="field-grid">
+          <label>掛號紀錄<select id="bill-registration"></select></label>
+          <label>身份別
+            <select id="bill-insurance"><option value="健保">健保</option><option value="自費">自費</option></select>
+          </label>
+          <label>折扣別
+            <select id="bill-discount"><option value="一般">一般(無折扣)</option><option value="員工">員工(9折)</option><option value="弱勢">弱勢(8折)</option></select>
+          </label>
+          <label>掛號費<input id="bill-reg-fee" type="number" value="150" /></label>
+          <label>診察費<input id="bill-consult-fee" type="number" value="380" /></label>
+          <label>部份負擔<input id="bill-copay" type="number" value="50" /></label>
+        </div>
+        <div class="actions">
+          <button id="btn-calc-bill" class="primary">試算</button>
+          <button id="btn-confirm-bill">確認收費</button>
+          <button id="btn-print-bill">列印收據</button>
+        </div>
+        <pre id="bill-preview" class="mono"></pre>
+        <div class="table-wrap"><table id="billing-table"></table></div>
+      </article>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

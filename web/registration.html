@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>掛號系統 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1>
+        <p>掛號系統</p>
+      </div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html" class="active">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html">管理系統</a>
+      </div>
+    </header>
+    <nav class="site-nav">
+      <a href="./patient-system.html">病人系統首頁</a>
+      <a href="./registration.html" class="active">門診掛號</a>
+      <a href="./lookup.html">查詢/退掛/轉掛</a>
+      <a href="./patients.html">病患總覽</a>
+      <a href="./announcements.html">公告管理</a>
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html">資料管理</a>
+    </nav>
+    <main>
+      <article class="card" style="margin-bottom: 16px">
+        <h2>預約掛號流程</h2>
+        <div class="hero-chip-row">
+          <span class="hero-chip">1 選擇院區地點</span>
+          <span class="hero-chip">2 查詢科別/醫師</span>
+          <span class="hero-chip">3 選擇看診日期</span>
+          <span class="hero-chip">4 確認預約掛號</span>
+        </div>
+        <div class="field-row">
+          <label style="min-width: 180px">院區地點</label>
+          <select id="reg-campus"></select>
+        </div>
+      </article>
+
+      <div class="grid two">
+        <article class="card">
+          <h2>病患基本資料</h2>
+          <div class="field-row">
+            <label>身分證/居留證</label>
+            <input id="reg-national-id" placeholder="A123456789" />
+            <button id="btn-check-patient">查詢病患</button>
+          </div>
+          <div class="field-grid">
+            <label>病歷號<input id="reg-medical-no" readonly /></label>
+            <label>姓名<input id="reg-name" /></label>
+            <label>健保卡號<input id="reg-health-card" placeholder="HC1234567890" /></label>
+            <label>
+              性別
+              <select id="reg-gender">
+                <option value="">請選擇</option>
+                <option value="0.女">0.女</option>
+                <option value="1.男">1.男</option>
+                <option value="2.中性">2.中性</option>
+                <option value="3.未知">3.未知</option>
+              </select>
+            </label>
+            <label>生日(民國7碼)<input id="reg-birth" maxlength="7" /></label>
+            <label>年齡<input id="reg-age" readonly /></label>
+            <label>電話<input id="reg-phone" /></label>
+            <label>縣市<select id="reg-city"></select></label>
+            <label>行政區<select id="reg-district"></select></label>
+            <label class="span-2">詳細地址<input id="reg-address" /></label>
+          </div>
+        </article>
+        <article class="card">
+          <h2>掛號資訊</h2>
+          <div class="field-grid">
+            <label>掛號日期<input id="reg-date" type="date" /></label>
+            <label>找科別<select id="reg-department"></select></label>
+            <label>時段<select id="reg-timeslot"></select></label>
+            <label class="span-2">找醫師<select id="reg-doctor"></select></label>
+          </div>
+          <div class="ticket-box"><span>掛號號碼</span><strong id="reg-number">-</strong></div>
+          <div class="actions">
+            <button id="btn-register" class="primary">掛號確認</button>
+            <button id="btn-print">列印掛號單</button>
+            <button id="btn-clear-registration">清空</button>
+          </div>
+        </article>
+      </div>
+
+      <article class="card" style="margin-top: 16px">
+        <h2>掛號須知（參考醫院掛號站流程）</h2>
+        <ul>
+          <li>請先選擇院區，再依科別或醫師查詢可掛號門診。</li>
+          <li>掛號完成後，可至「查詢/退掛/轉掛」頁面執行查詢或取消。</li>
+          <li>看診進度、停代診與掛號說明可由首頁與各系統導覽快速進入。</li>
+        </ul>
+      </article>
+    </main>
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

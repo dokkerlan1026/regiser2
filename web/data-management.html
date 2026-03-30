@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>資料管理 - 憨吉聯合大醫院</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1><a class="brand-link" href="./index.html">憨吉聯合大醫院</a></h1>
+        <p>資料管理</p>
+      </div>
+      <div class="topbar-actions system-switch">
+        <a href="./patient-system.html">病人系統</a>
+        <a href="./billing-system.html">批價櫃台</a>
+        <a href="./doctor-system.html">醫生系統</a>
+        <a href="./management-system.html" class="active">管理系統</a>
+      </div>
+    </header>
+
+    <nav class="site-nav">
+      <a href="./index.html">系統入口</a>
+      <a href="./data-management.html" class="active">資料管理</a>
+    </nav>
+
+    <main>
+      <article class="card data-admin">
+        <h2>個人資料修改</h2>
+        <p>請先輸入身分證號與健保卡號驗證身分，驗證通過後可修改個資。</p>
+        <div class="field-row">
+          <input id="verify-national-id" placeholder="身分證/居留證號" />
+          <input id="verify-health-card" placeholder="健保卡號" />
+          <button id="btn-verify-profile" class="primary">驗證</button>
+        </div>
+      </article>
+
+      <article class="card" style="margin-top: 16px">
+        <h2>個人資料表單</h2>
+        <div class="field-grid">
+          <label>病歷號<input id="profile-medical-no" readonly /></label>
+          <label>姓名<input id="profile-name" /></label>
+          <label>身分證<input id="profile-national-id" readonly /></label>
+          <label>健保卡號<input id="profile-health-card" /></label>
+          <label>
+            性別
+            <select id="profile-gender">
+              <option value="">請選擇</option>
+              <option value="0.女">0.女</option>
+              <option value="1.男">1.男</option>
+              <option value="2.中性">2.中性</option>
+              <option value="3.未知">3.未知</option>
+            </select>
+          </label>
+          <label>生日(民國7碼)<input id="profile-birth" maxlength="7" /></label>
+          <label>年齡<input id="profile-age" readonly /></label>
+          <label>電話<input id="profile-phone" /></label>
+          <label>縣市<select id="profile-city"></select></label>
+          <label>行政區<select id="profile-district"></select></label>
+          <label class="span-2">詳細地址<input id="profile-address" /></label>
+        </div>
+        <div class="actions">
+          <button id="btn-save-profile" class="primary">儲存個人資料</button>
+        </div>
+      </article>
+    </main>
+
+    <div id="toast"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
