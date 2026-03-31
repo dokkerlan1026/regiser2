@@ -62,58 +62,13 @@ https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 
 ---
 
-## 3. 資料庫與 Legacy 檔案結構（完整格式）
+## 3. 資料庫與檔案結構
 
 > 本章完整收錄 `docs/資料庫檔案結構.md` 之規格寫法（格式說明、總覽表、檔案卡、欄位表、Web 對映）。
 
 ### 3.1 格式說明
-- 鍵值符號：`P` = 主鍵（Primary Key）、`S` = 索引鍵（Index Key）
-- 欄位型態以 Legacy 文件為準：`char` / `int` / `tinyint` / `real` / `varchar`
-- 日期欄位多採民國格式字串（如 `0861225`）
 
-### 3.2 Legacy HIS 檔案總覽
-
-#### 3.2.1 基本主檔
-| 檔案英文 | 檔案中文 | 用途 |
-|---|---|---|
-| `DIVISIONTBL` | 科別主檔 | 科別代碼與名稱 |
-| `DOCTORTBL` | 醫師主檔 | 醫師基本與申報資訊 |
-| `COUNTYTBL` | 縣市主檔 | 地址行政區資料 |
-| `TOWNTBL` | 鄉鎮主檔 | 地址行政區資料 |
-
-#### 3.2.2 掛號與排班
-| 檔案英文 | 檔案中文 | 用途 |
-|---|---|---|
-| `OPDREGROOMTBL` | 掛號排班檔 | 每日排班、給號、限掛控制 |
-| `OPDREGULARROOMTBL` | 規則排班檔 | 週規則排班模板 |
-| `OPDREGDIAGNOSISTBL` | 掛號看診檔 | 掛號交易主檔 |
-| `OPDGIVENUMBERTBL` | 給號方式對照檔 | 定義可給號序列 |
-| `OPDFLOWANONYMTBL` | 流水號無名氏檔 | 流水號與無名氏編號管理 |
-
-#### 3.2.3 科別／時段／診別
-| 檔案英文 | 檔案中文 | 用途 |
-|---|---|---|
-| `GENSECTIONTBL` | 院內科別檔 | 科別與申報對映 |
-| `GENDECSECTIONTBL` | 申報科別檔 | 門住診申報科別 |
-| `GENTIMEDIVISIONTBL` | 時段檔 | 早／午／晚與時段起訖 |
-| `OPDROOMTYPETBL` | 診別檔 | 一般／夜診／假診／急診 |
-| `OPDSPECIALROOMTBL` | 特殊診檔 | 兒童／青少年／成人預防等 |
-
-#### 3.2.4 轉診、收費、書證、統計
-| 檔案英文 | 檔案中文 | 用途 |
-|---|---|---|
-| `GENHOSPITALTBL` | 轉診醫院對照檔 | 轉診來源資料 |
-| `OPDREGFEETBL` | 掛號費檔 | 依診別／時段／身分取價 |
-| `OPDDIAGNOSISBOOKTBL` | 診斷書檔 | 診斷書種類與流水 |
-| `OPDBOOKMANAGETBL` | 診斷書管理檔 | 病患診斷書紀錄 |
-| `OpdRegPeopleTbl` | 掛號人數統計檔 | 服務量統計 |
-| `OpdStcDoctorTbl` | 醫師服務統計檔 | 醫師看診統計 |
-| `OpdStcRegWayTbl` | 掛號方式統計檔 | 現場／電話／語音統計 |
-| `OpdStcRegServiceTbl` | 掛號員服務統計檔 | 櫃台人員服務量 |
-
-### 3.3 核心交易檔格式
-
-#### 3.3.1 `OPDREGROOMTBL`（掛號排班檔）
+#### 3.1.1 `OPDREGROOMTBL`（掛號排班檔）
 
 **檔案卡**
 - 主鍵：`P(chDate, chPNC, chRoom)`
@@ -141,7 +96,7 @@ https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 |  | `intPreLimit` | 預約限額 | `int` | - | `12/999` | 999=不限 |
 |  | `intTotalLimit` | 限掛人數 | `int` | - | `99/999` | 999=不限 |
 
-#### 3.3.2 `OPDREGULARROOMTBL`（規則排班檔）
+#### 3.1.2 `OPDREGULARROOMTBL`（規則排班檔）
 
 **檔案卡**
 - 主鍵：`P(chWeekDay, chPNC, chRoom)`
@@ -161,7 +116,7 @@ https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 |  | `chNoMethod` | 給號方式 | `char` | 1 | `1` | 對照給號方式 |
 |  | `intBeginNo` | 起始號 | `int` | - | `1` | 預設起號 |
 
-#### 3.3.3 `OPDREGDIAGNOSISTBL`（掛號看診檔）
+#### 3.1.3 `OPDREGDIAGNOSISTBL`（掛號看診檔）
 
 **檔案卡**
 - 主鍵：`P(chDate, chPNC, chRoom, intRegNo)`
@@ -188,9 +143,9 @@ https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 |  | `chIfRegSTC` | 轉掛狀態 | `char` | 1 | `0/1/2` | 退掛／轉掛／不計服務量 |
 |  | `intReceiptNo` | 掛號費收據號 | `int` | - | `123456` | 收據對應 |
 
-### 3.4 現行網頁版資料結構格式（localStorage）
+### 3.2 現行網頁版資料結構格式
 
-#### 3.4.1 根物件結構
+#### 3.2.1 根物件結構
 | 欄位 | 型態 | 說明 |
 |---|---|---|
 | `departments` | `Array<Object>` | 科別清單 |
@@ -207,7 +162,7 @@ https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 | `announcements` | `Array<Object>` | 公告資料 |
 | `events` | `Array<Object>` | 事件紀錄 |
 
-#### 3.4.2 主要物件格式（摘要）
+#### 3.2.2 主要物件格式（摘要）
 | 物件 | 必要欄位 | 說明 |
 |---|---|---|
 | `patients[]` | `id`, `medicalRecordNo`, `name`, `nationalId`, `healthCardNo` | 病患主檔 |
@@ -215,7 +170,7 @@ https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 | `billings[]` | `id`, `registrationId`, `items`, `totalAmount`, `paidAt` | 收費交易 |
 | `orders[]` | `id`, `registrationId`, `orderType`, `dose`, `frequency`, `days` | 醫囑資料 |
 
-### 3.5 對映關係（Legacy → Web）
+### 3.3 對映關係
 | Legacy 欄位 | Web 欄位 | 說明 |
 |---|---|---|
 | `OPDREGDIAGNOSISTBL.chMRNo` | `patients.medicalRecordNo` | 病歷號對映 |
@@ -223,7 +178,7 @@ https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 | `chIfWithdraw` / `chIfRegSTC` | `registrations.status` | 退掛／轉掛狀態 |
 | `intRegNo` | `registrations.regNumber` | 掛號序號 |
 
-### 3.6 備註（資料庫章節）
+### 3.4 備註（資料庫章節）
 - Legacy 結構屬大型醫院主機系統，欄位完整且偏交易導向。
 - 現行網頁版為教學／流程展示模型，欄位較精簡。
 - 後續若接正式資料庫，建議先以本章 3.4 物件格式建立 ERD，再逐步擴充 3.3 欄位。
