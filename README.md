@@ -1,5 +1,5 @@
 # 憨吉聯合大醫院系統文件
-
+https://huggingface.co/spaces/Dokkerlan123/hanji_hospital
 
 ## 目錄
 1. 文件目的與範圍  
